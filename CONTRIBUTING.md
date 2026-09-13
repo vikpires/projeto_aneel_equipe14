@@ -52,7 +52,7 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-- Linux / macOS::
+- Linux/macOS:
 
 ```bash
 cd projeto_aneel_equipe14
@@ -65,6 +65,14 @@ source .venv/bin/activate
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
+```
+
+---
+
+#### **4. Executar Script do Pipeline:**
+
+```bash
+python main.py
 ```
 
 ---
