@@ -1,10 +1,10 @@
-import json
 import logging
 from pathlib import Path
 import duckdb
 
 from src.config import PROCESSED_DIR
 from src.data.constants import PIPELINE_TABLES
+from src.utils.manifesto import validate_manifest
 
 logger = logging.getLogger(__name__)
 
@@ -15,14 +15,6 @@ def validate_processed_tables(output_dir: Path | str = PROCESSED_DIR) -> None:
     if not output_dir.is_dir():
         raise FileNotFoundError(f"Diretório processado ausente: {output_dir}")
 
-    manifest_path = output_dir / "_manifesto.json"
-    if not manifest_path.is_file():
-        raise FileNotFoundError(f"Manifesto ausente: {manifest_path}")
-
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if manifest.get("status") != "SUCCESS":
-        raise ValueError("Manifesto do Star Schema não indica sucesso")
-
     expected_files = {f"{table}.parquet" for table in PIPELINE_TABLES}
     missing_files = sorted(
         file_name
@@ -31,6 +23,8 @@ def validate_processed_tables(output_dir: Path | str = PROCESSED_DIR) -> None:
     )
     if missing_files:
         raise FileNotFoundError("Tabelas finais ausentes: " + ", ".join(missing_files))
+
+    validate_manifest(output_dir, expected_files, "processed")
 
     with duckdb.connect() as connection:
         for file_name in sorted(expected_files):

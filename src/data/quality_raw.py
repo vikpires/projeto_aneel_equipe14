@@ -3,6 +3,7 @@ from pathlib import Path
 import duckdb
 
 from src.config import DATASETS, RAW_DIR, CONT_PATH
+from src.utils.manifesto import validate_manifest
 
 logger = logging.getLogger(__name__)
 
@@ -110,5 +111,11 @@ def validate_raw_tables(raw_dir: Path | str = RAW_DIR) -> None:
             if not path.is_file() or path.stat().st_size == 0:
                 raise FileNotFoundError(f"Arquivo raw ausente ou vazio: {path}")
             _require_raw_columns(connection, path, candidates)
+
+    validate_manifest(
+        raw_dir,
+        (path.name for path in expected_files),
+        "raw",
+    )
 
     logger.info("Quality gate raw aprovado: %s arquivos", len(expected_files))

@@ -1,8 +1,4 @@
-# Orquestrador do Star Schema via DuckDB e SQL Modularizado.
-
 from __future__ import annotations
-from datetime import datetime, timezone
-import json
 import logging
 from pathlib import Path
 import shutil
@@ -19,9 +15,18 @@ from src.config import (
     REG_PATH,
     PROCESSED_DIR as DEFAULT_OUTPUT_DIR,
 )
-from src.data.constants import PIPELINE_TABLES, ANO_INICIO, ANO_FIM
+from src.data.constants import (
+    ANO_FIM,
+    ANO_INICIO,
+    DUCKDB_MEMORY_LIMIT,
+    DUCKDB_PRESERVE_INSERTION_ORDER,
+    DUCKDB_THREADS,
+    PARQUET_COMPRESSION,
+    PIPELINE_TABLES,
+)
 from src.utils.sql_loader import load_sql_query
 from src.utils.time_formatter import set_time_formatter
+from src.utils.manifesto import write_manifest
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +60,7 @@ def _executar_fato_anual(
     logger.info("Exportando Parquet consolidado...")
     con.execute(
         f"COPY {temp_table} TO '{target_parquet.resolve().as_posix()}' "
-        f"(FORMAT PARQUET, COMPRESSION ZSTD);"
+        f"(FORMAT PARQUET, COMPRESSION {PARQUET_COMPRESSION});"
     )
     con.execute(f"DROP TABLE IF EXISTS {temp_table};")
 
@@ -122,10 +127,12 @@ def run_fato_dim(
     }
 
     con = duckdb.connect()
-    con.execute("SET memory_limit = '8GB';") # Ajuste conforme a memória disponível
-    con.execute("SET threads = 4;") # Ajuste conforme o número de núcleos disponíveis na CPU
+    con.execute(f"SET memory_limit = '{DUCKDB_MEMORY_LIMIT}';")
+    con.execute(f"SET threads = {DUCKDB_THREADS};")
     con.execute(f"SET temp_directory = '{temp_dir.resolve().as_posix()}';")
-    con.execute("SET preserve_insertion_order = false;")
+    con.execute(
+        f"SET preserve_insertion_order = {str(DUCKDB_PRESERVE_INSERTION_ORDER).lower()};"
+    )
 
     total_tabelas = len(PIPELINE_TABLES)
     tempo_inicio_total = time.time()
@@ -169,7 +176,7 @@ def run_fato_dim(
                 con.execute(
                     f"COPY ({query}) "
                     f"TO '{target_parquet.resolve().as_posix()}' "
-                    f"(FORMAT PARQUET, COMPRESSION ZSTD);"
+                    f"(FORMAT PARQUET, COMPRESSION {PARQUET_COMPRESSION});"
                 )
 
             tempo_etapa = time.time() - t_etapa
@@ -182,23 +189,18 @@ def run_fato_dim(
 
         tempo_total = time.time() - tempo_inicio_total
         logger.info(
-            "Pipeline finalizado com sucesso em %s!",
+            "Modelagem Star Schema concluída com sucesso em %s!",
             set_time_formatter(tempo_total),
         )
 
-        # Manifesto final (JSON) com informações de execução
-        arquivos = sorted([p.name for p in output_dir.glob("*.parquet")])
-        manifesto = {
-            "gerado_em": datetime.now(timezone.utc).isoformat(),
-            "tempo_execucao_segundos": round(tempo_total, 2),
-            "motor": "duckdb_sql_files",
-            "total_tabelas": len(arquivos),
-            "arquivos": arquivos,
-            "status": "SUCCESS",
-        }
-        (output_dir / "_manifesto.json").write_text(
-            json.dumps(manifesto, ensure_ascii=False, indent=2), encoding="utf-8"
+        manifest_path = write_manifest(
+            output_dir,
+            "processed",
+            motor="duckdb_sql_files",
+            tempo_execucao_segundos=round(tempo_total, 2),
+            total_tabelas=len(list(output_dir.glob("*.parquet"))),
         )
+        logger.info("Manifesto processed gerado: %s", manifest_path)
         return output_dir
 
     finally:

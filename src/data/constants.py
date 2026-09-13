@@ -58,6 +58,13 @@ PIPELINE_TABLES = [
     "fato_causa_mensal",
 ]
 
+# Configuracões fixas usadas pela modelagem dimensional no DuckDB.
+DUCKDB_MEMORY_LIMIT = "4GB"  # Ajuste conforme a capacidade do seu sistema
+DUCKDB_THREADS = 4  # Ajuste conforme a capacidade do seu sistema
+DUCKDB_PRESERVE_INSERTION_ORDER = False
+PARQUET_COMPRESSION = "ZSTD"
+
+# Consultas SQL para validação de qualidade dos dados intermediários (interim)
 QUERY_CONTINUIDADE_INTERIM_VALIDATE = """
     SELECT COUNT(*), MIN(AnoIndice), MAX(AnoIndice),
         COUNT(*) FILTER (WHERE IdeConjunto IS NULL) * 100.0 / COUNT(*),
