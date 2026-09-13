@@ -11,6 +11,7 @@ from src.data.constants import (
     QUERY_DUPLICATE_INTERIM_VALIDATE,
     QUERY_INTERRUPTIONS_INTERIM_VALIDATE,
 )
+from src.utils.manifesto import validate_manifest
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +60,8 @@ def validate_interim_tables() -> None:
     for path in required_inputs:
         if not path.is_file() or path.stat().st_size == 0:
             raise FileNotFoundError(f"Arquivo intermediário ausente ou vazio: {path}")
+
+    validate_manifest(Path(CONT_PATH).parent, None, "interim")
 
     with duckdb.connect() as connection:
         for path, required_columns in required_inputs.items():

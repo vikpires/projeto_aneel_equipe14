@@ -4,8 +4,8 @@ import duckdb
 import zipfile
 
 from src.data.constants import PIPELINE_TABLES
+from src.utils.manifesto import write_manifest
 from tests.constants import (
-    PROCESSED_MANIFEST,
     QUERY_PROCESSED_FIXTURE,
     QUERY_FACT_DIM_ATRIBUTOS,
     QUERY_FACT_DIM_CONTINUIDADE,
@@ -82,7 +82,12 @@ def star_schema_inputs(tmp_path):
             input_dir / "atributos.parquet",
             QUERY_FACT_DIM_ATRIBUTOS,
         ),
-        "region_path": (input_dir / "regiao.parquet", QUERY_FACT_DIM_REGIAO),
+        "region_path": (
+            input_dir / "regiao.parquet",
+            QUERY_FACT_DIM_REGIAO.replace("NomMunicipio", "Municipio").replace(
+                "SigUF", "UF"
+            ),
+        ),
     }
 
     con = duckdb.connect()
@@ -91,6 +96,8 @@ def star_schema_inputs(tmp_path):
             con.sql(query).write_parquet(str(path))
     finally:
         con.close()
+
+    write_manifest(input_dir, "interim")
 
     return {
         "input_dir": input_dir,
@@ -121,6 +128,7 @@ def raw_inputs(tmp_path):
             connection.execute(f"COPY ({query}) TO '{target}' (FORMAT CSV, HEADER)")
     finally:
         connection.close()
+    write_manifest(raw_dir, "raw")
     return raw_dir
 
 
@@ -136,5 +144,10 @@ def processed_tables_output(tmp_path):
     finally:
         connection.close()
 
-    (output_dir / "_manifesto.json").write_text(PROCESSED_MANIFEST, encoding="utf-8")
+    write_manifest(
+        output_dir,
+        "processed",
+        motor="duckdb_sql_files",
+        total_tabelas=len(PIPELINE_TABLES),
+    )
     return output_dir

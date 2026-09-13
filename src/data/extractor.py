@@ -1,22 +1,17 @@
 import logging
+import time
 
-from src.config import DATASETS, INTERIM_DIR, PROCESSED_DIR, RAW_DIR
+from src.config import DATASETS, RAW_DIR
 from src.utils.download_utils import download_stream
+from src.utils.manifesto import write_manifest
 
 logger = logging.getLogger(__name__)
 
 
-# Função para criar os diretórios necessários caso não existam
-def setup_folders() -> None:
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
-    INTERIM_DIR.mkdir(parents=True, exist_ok=True)
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-
-
 # Executar o processo de ingestão de dados.
 def run_extract_data() -> None:
-
-    setup_folders()
+    tempo_inicio = time.time()
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
 
     # 1. Download do Arquivo Raw de Continuidade (arquivo único)
     logger.info("--- Baixando Dataset de Continuidade ---")
@@ -42,6 +37,15 @@ def run_extract_data() -> None:
     # 5. Região e UF dos conjuntos
     logger.info("--- Baixando Dataset de Região ---")
     download_stream(DATASETS["regiao"]["url"], DATASETS["regiao"]["raw_path"])
+
+    tempo_execucao = time.time() - tempo_inicio
+    manifest_path = write_manifest(
+        RAW_DIR,
+        "raw",
+        fonte="ANEEL",
+        tempo_execucao_segundos=round(tempo_execucao, 2),
+    )
+    logger.info("Manifesto raw gerado: %s", manifest_path)
 
 
 if __name__ == "__main__":

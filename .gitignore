@@ -43,8 +43,3 @@ data/processed/*
 !data/raw/.gitkeep
 !data/interim/.gitkeep
 !data/processed/.gitkeep
-
-# Airflow local
-.airflow/
-airflow.cfg
-airflow.db

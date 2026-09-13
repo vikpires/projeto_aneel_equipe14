@@ -1,6 +1,7 @@
 from __future__ import annotations
 import logging
 from pathlib import Path
+import time
 import duckdb
 
 from src.config import DATASETS, INTERIM_DIR
@@ -8,13 +9,18 @@ from src.data.constants import (
     ANO_FIM,
     ANO_INICIO,
     COLUMN_CANDIDATES,
+    DUCKDB_THREADS,
+    DUCKDB_PRESERVE_INSERTION_ORDER,
+    PARQUET_COMPRESSION,
     REQUIRED_COLUMNS,
+    DUCKDB_MEMORY_LIMIT,
 )
 from src.utils.sql_loader import (
     detect_csv_encoding,
     load_sql_query,
     resolve_column_name,
 )
+from src.utils.manifesto import write_manifest
 
 logger = logging.getLogger(__name__)
 
@@ -67,20 +73,23 @@ def transform_data(
     copy_statement = f"""
         COPY ({sql_query})
         TO '{out_str}'
-        (FORMAT PARQUET, COMPRESSION 'ZSTD');
+        (FORMAT PARQUET, COMPRESSION {PARQUET_COMPRESSION});
     """
     con.execute(copy_statement)
     logger.info("[SUCESSO] Gerado: %s", out_name)
 
 
 def run_transform_data(force: bool = False) -> None:
+    tempo_inicio = time.time()
     INTERIM_DIR.mkdir(parents=True, exist_ok=True)
 
     with duckdb.connect() as con:
         # Configurações de performance para evitar estouro de memória
-        con.execute("SET memory_limit = '8GB';")
-        con.execute("SET threads = 4;")
-        con.execute("SET preserve_insertion_order = false;")
+        con.execute(f"SET memory_limit = {DUCKDB_MEMORY_LIMIT};")
+        con.execute(f"SET threads = {DUCKDB_THREADS};")
+        con.execute(
+            f"SET preserve_insertion_order = {DUCKDB_PRESERVE_INSERTION_ORDER};"
+        )
 
         # 1. Continuidade (DEC / FEC Apurados)
         logger.info("--- Processando Continuidade via DuckDB ---")
@@ -145,7 +154,15 @@ def run_transform_data(force: bool = False) -> None:
             ano_fim=ANO_FIM,
         )
 
-    logger.info("Processamento concluído! Verifique a pasta %s.", INTERIM_DIR)
+    tempo_execucao = time.time() - tempo_inicio
+    manifest_path = write_manifest(
+        INTERIM_DIR,
+        "interim",
+        motor="duckdb_sql_files",
+        periodo={"ano_inicio": ANO_INICIO, "ano_fim": ANO_FIM},
+        tempo_execucao_segundos=round(tempo_execucao, 2),
+    )
+    logger.info("Manifesto interim gerado: %s", manifest_path)
 
 
 if __name__ == "__main__":
