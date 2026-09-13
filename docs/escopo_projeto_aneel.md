@@ -1,186 +1,140 @@
-# Escopo do Projeto
+# Escopo do Projeto ANEEL - Energia em Risco
+### Análise dos Indicadores DEC/FEC e Predição de Transgressões no Sistema de Distribuição de Energia
 
-* **Projeto:** ANEEL — Energia em Risco 
+* **Documento:** Escopo do Projeto e Compreensão do Negócio (CRISP-DM Fase 1)
 
-* **Documento:** Escopo do Projeto e Entendimento do Negócio (CRISP-DM Fase 1)
+* **Equipe Responsável:** Equipe 14 - Antônio Marcel, Edivaldo Dias, Leonardo Gomes, Leonardo Santos, Vanessa Vilela, Vitor Pires
 
-* **Data de Elaboração:** 09/2026
+* **Período de Execução:** 01/09/2026 a 30/09/2026 
 
-* **Versão:** 1.1
+* **Gestão:** CRISP-DM e Kanban | Repositório GitHub (Branch padrão: `develop`)
+
+* **Links:** [Repositório GitHub](https://github.com/vikpires/projeto_aneel_equipe14) • [Quadro Kanban](https://github.com/users/vikpires/projects/7/views/1)
+
+* **Versão:** 2.0
 
 ---
 
 ## Sumário
 
-- [1. Dados do Projeto ](#1-dados-do-projeto)
-- [2. Visão Geral](#2-visão-geral)
-- [3. Proposta do Projeto](#3-proposta-do-projeto)
-    - [3.1. Contextualização](#31-contextualização)
-    - [3.2. Problema](#32-problema)
-    - [3.3. Objetivo Geral](#33-objetivo-geral)
-    - [3.4. Objetivos Específicos](#34-objetivos-específicos)
-- [4. Metodologia](#4-metodologia)
-- [5. Usuários e Matriz de Stakeholders](#5-usuários-e-matriz-de-stakeholders)
-- [6. Dados Necessários e Fontes](#6-dados-necessários-e-fontes)
-- [7. Hipóteses do Projeto](#7-hipóteses-do-projeto)
-- [8. Riscos](#8-riscos)
-- [9. Fora de Escopo](#9-fora-de-escopo)
-- [10. Estrutura de Custos](#10-estrutura-de-custos)
-- [11. Solução](#11-solução)
-- [12. Métricas de Avaliação e Benchmarks de Sucesso](#12-métricas-de-avaliação-e-benchmarks-de-sucesso)
-- [13. Requisitos e Restrições ](#13-requisitos-e-restrições)
-- [14. Entregáveis](#14-entregáveis)
-- [15. Síntese Executiva](#15-síntese-executiva)
+1. **Visão Estratégica e Negócio**
+   - [1.1. Visão Geral](#31-contextualização)
+   - [1.2. Contextualização](#31-contextualização)
+   - [1.3. Problema e Oportunidades](#32-problema)
+   - [1.4. Objetivo](#33-objetivo-geral)
+   - [1.5. Stakeholders e Usuários Finais](#5-usuários-e-matriz-de-stakeholders)
+   
+2. **Escopo e Viabilidade**
+   - [2.1.Escopo do Projeto ](#1-dados-do-projeto)
+   - [2.2 Hipóteses de Negócio](#7-hipóteses-do-projeto)
+   - [2.3 Riscos e Mitigações](#8-riscos)
+   - [2.4 Estrutura de Custos](#10-estrutura-de-custos)
+
+3. **Dados e Engenharia Analítica**
+   - [3.1 Fontes e Ingestão de Dados](#6-dados-necessários-e-fontes)
+   - [3.2 Requisitos e Restrições ](#13-requisitos-e-restrições)
+
+4. **Solução Técnica**
+   - [4.1. Arquitetura da Solução](#11-solução)
+   - [4.2 Metodologia](#4-metodologia)
+   - [4.3. Métricas de Avaliação e Benchmarks de Sucesso](#12-métricas-de-avaliação-e-benchmarks-de-sucesso)
+
+5. Entregáveis e Síntese Executiva
+   - [5.1. Entregáveis](#14-entregáveis)
+   - [5.2. Síntese Executiva](#15-síntese-executiva)
+
 
 ---
 
-## 1. Dados do Projeto 
-
-* **Título:** Projeto ANEEL — Energia em Risco: Análise dos Indicadores DEC/FEC e Predição de Transgressões no Sistema de Distribuição de Energia
-
-* **Equipe Responsável:** Equipe 14 - Antônio Marcel, Edivaldo Dias, Leonardo Gomes, Leonardo Santos, Vanessa Vilela, Vitor Pires
-
-* **Metodologia de Gestão:** CRISP-DM e a metodologia ágil Kanban
-
-* **Repositório Oficial:** [Repositório do Projeto](https://github.com/vikpires/projeto_aneel_equipe14) | (Branch padrão: `develop`)
-
-* **Quadro Kanban:** [Kanban_projeto_aneel_equipe14](https://github.com/users/vikpires/projects/7/views/1)
-
-* **Período de Execução:** 01/09/2026 a 30/09/2026 
-
----
-
-## 2. Visão Geral
+## 1. Visão Estratégica e Negócio
+### 1.1. Visão Geral
 Este documento consolida a **Fase 1 do CRISP-DM - Compreensão do Negócio (Business Understanding)**. Sua finalidade é formalizar o alinhamento estratégico, mapear as dores do setor elétrico e fixar critérios técnicos mensuráveis antes da manipulação dos dados brutos no pipeline de dados.
 
----
+### 1.2. Contextualização
+No Brasil, as distribuidoras de enérgia elétrica operam sob regime de concessão pública regulada pela AN
 
-## 3. Proposta do Projeto
+A distribuição de energia elétrica no Brasil opera sob regime de concessão pública regulada pela Agência Nacional de Energia Elétrica (ANEEL). A qualidade e a continuidade do fornecimento são mensuradas por dois indicadores operacionais fundamentais:
 
-Elaborar uma solução analítica e preditiva para diagnosticar, monitorar e prever transgressões nos indicadores de continuidade do fornecimento de energia elétrica (DEC e FEC) estipulados pela Agência Nacional de Energia Elétrica (ANEEL).
+* **DEC (Duração Equivalente de Interrupção por Unidade Consumidora):** Mede o tempo médio acumulado, em horas, que um grupo de consumidores fica sem fornecimento de energia.
 
-#### 3.1. Contextualização
-A distribuição de energia elétrica no Brasil opera sob regime de concessão pública regulada pela ANEEL. A conformidade dos serviços prestados pelas distribuidoras é fiscalizada segundo os critérios do **PRODIST (Procedimentos de Distribuição de Energia Elétrica no Sistema Elétrico Nacional)**, que estabelece padrões rígidos de qualidade comercial e de continuidade do fornecimento.
+* **FEC (Frequência Equivalente de Interrupção por Unidade Consumidora):** Mede a quantidade média de eventos de interrupção no fornecimento de energia ao mesmo grupo de consumidores no período apurado.
 
-A ANEEL acompanha essa qualidade por meio de indicadores regulatórios que permitem medir a duração e a frequência das interrupções percebidas pelos consumidores. Os indicadores centrais utilizados neste projeto são:
+**Dinâmica Regulatória e Penalidades:**
 
-* **DEC (Duração Equivalente de Interrupção por Unidade Consumidora):** Mede o tempo médio acumulado, em horas, que os consumidores de um conjunto ficaram sem fornecimento elétrico em um determinado intervalo de tempo.
+Anualmente, a ANEEL estebelece limites máximos toleráveis para vada conjunto de unidades consumidoras. Ultrpassar esses limites caracteriza descumprimento das cláusulas do contrato de concessão (PRODIST - Módulo 8), acarretando em:
 
-* **FEC (Frequência Equivalente de Interrupção por Unidade Consumidora):** Mede a quantidade média de vezes em que ocorreram interrupções no fornecimento para os consumidores desse mesmo conjunto.
+1. Compensação financeira automática na fatura dos consumidores afetados;
 
-Para cada conjunto e período de apuração, a ANEEL publica os valores de **Limite DEC** e **Limite FEC**. Quando uma distribuidora apura índices superiores a essas metas (Apurado > Limite), comete-se uma **transgressão regulatória**. Essa violação obriga a concessionária a creditar compensações financeiras automáticas na fatura dos consumidores afetados, além de elevar o risco de autuações administrativas e comprometer a reputação da companhia perante o mercado e os órgãos de controle.
+2. Sujeição a processos punitivos, multas administrativas e elevação do risco reputacional da concessionária.
 
-#### 3.2. Problema
-A gestão de continuidade do serviço nas concessionárias opera frequentemente de forma **reativa**: as violações só são diagnosticadas após o fechamento do período regulatório, quando o prejuízo financeiro e as compensações aos consumidores já estão consolidados.
+### 1.3. Problema
+A gestão de continuidade do serviço nas concessionárias opera frequentemente de forma **reativa**, sendo caracterizado por:
 
-A solução proposta visa apoiar as seguintes decisões críticas de negócio:
+1. Defasagem temporal de diagnóstico: A identificação de violações ocorre após o encerramento do ciclo regulatório, inviabilizando intervenções preventivas.
+2. Passivos financeiros e punições: A ausência de alertas antecipados gera desembolsos imediatos em compensações aos consumidores afetados.
+3. Fricção analítica em escala: As bases brutas possuem dezenas de milhões de ocorrências descentralizadas e não padronizadas limitando a visão operacional e as estratégias de negócio.
 
-* **Transição da Gestão Reativa para Preventiva:** Mudar o foco da apuração retroativa de multas para a antecipação de conjuntos elétricos com risco iminente de transgressão.
+### 1.4. Objetivos
+#### 1.4.1. Objetivo Geral
+Construir uma solução integrada de Engenharia de Dados, Análise de Dados e Machine Learning para diagnosticar o comportamento histórico dos indicadores DEC e FEC, mapear a reincidência de transgressões e estimar a probabilidade mensal de estouro dos limites regulatórios futuros por conjunto elétrico.
 
-* **Mitigação de Passivos Financeiros:** Reduzir o volume de créditos e indenizações diretas pagas aos consumidores por descumprimento de metas regulatórias do PRODIST Módulo 8.
+#### 1.4.2. Objetivos Específicos
+* Integrar e padronizar a série histórica (2021–2025) dos datasets regulatórios da ANEEL (Continuidade, Limites, Interrupções, Atributos e Regiões).
 
-* **Monitoramento Executivo Contínuo:** Fornecer à alta liderança e analistas regulatórios uma visão clara da evolução histórica da conformidade por distribuidora e região.
-
-#### 3.3. Objetivo Geral
-Construir uma solução integrada de Análise de Dados e Machine Learning que permita analisar o comportamento histórico dos indicadores DEC e FEC, diagnosticar reincidências de transgressões e estimar a probabilidade de descumprimento dos limites regulatórios futuros em nível de conjunto consumidor.
-
-#### 3.4. Objetivos Específicos
-* Consolidar a série histórica (2021–2025) dos dados de continuidade da ANEEL
-
-* Comparar os valores apurados com os limites regulatórios, mapeando taxas de transgressão e gerando ranking dos conjuntos elétricos mais críticos.
+* Cruzar dados apurados contra limites legais, estruturando rankings de criticidade, taxas de transgressão e disparidades regionais/sazonais.
 
 * Identificar comportamentos cíclicos e disparidades regionais no desempenho operacional.
 
-* Treinar e avaliar um modelo de Machine Learning supervisionado para classificar o risco de violação (Apurado > Limite) de conjuntos elétricos no horizonte mensal subsequente.
+* Treinar e validar um modelo de Machine Learning supervisionado para classificar o score de risco de transgressão (Apurado > Limite) no horizonte mensal subsequente (t + 1).
 
-* Disponibilizar os diagnósticos, estimativas de passivo financeiro e scores de risco preditivo em dashboards interativos no Power BI sob modelagem *Star Schema*.
+* Entregar a camada de dados modelada em *Star Schema* colunar via Parquet, consumida diretamente por painéis executivos e operacionais no Power BI.
 
----
-
-### 4. Metodologia
-
-O projeto adotará o framework **CRISP-DM**, estruturado em seis fases:
-
-1. **Compreensão do Negócio (Business Understanding):** Mapeamento das regras regulatórias (PRODIST/ANEEL), impacto financeiro das compensações por violação de DEC/FEC, definição de KPIs de negócio, métricas técnicas e escopo do projeto.
-
-2. **Compreensão dos Dados (Data Understanding):** Ingestão das bases anuais, auditoria de integridade e Análise Exploratória de Dados (EDA).
-
-3. **Preparação dos Dados (Data Preparation):** Limpeza, padronização e estruturação do modelo dimensional.
-
-4. **Modelagem (Modeling):** Desenvolvimento da camada analítica de medidas em DAX e modelagem preditiva de risco regulatório.
-
-5. **Avaliação (Evaluation):** Auditoria das regras de agregação e validação de desempenho dos modelos.
-
-6. **Implantação (Deployment) & Demo Day:** Desenvolvimento do relatório executivo no Power BI, documentação técnica e apresentação final.
-
-### 5. Usuários e Matriz de Stakeholders
+### 1.5. Stakeholders e Usuários Finais
 
 **Quem toma a decisão hoje?**  
 
-* **Gestores de Distribuidoras (Regulação e Diretoria):** Decidem provisões financeiras, prestam contas à ANEEL e definem estratégias corporativas para cumprimento do contrato de concessão.
-
-* **Operação e Manutenção (O&M):** Decidem a priorização de vistorias técnicas, alocação de equipes de campo e planos de melhoria na rede de distribuição.
+* **Gestores regulatórios/diretoria:** Planejamento financeiro e prestação de contas à ANEEL. 
+* **Operação e Manutenção (O&M):** Planejamento de vistorias e despacho de equipes de campo.
 
 **Quem é afetado?**  
 
 * **Consumidores Finais:** Sofrem diretamente com a falta de energia e recebem as compensações financeiras em fatura.
-
 * **Concessionária:** Sofre com o passivo financeiro imediato das compensações e o desgaste de imagem institucional.
-
-* **Times Técnicos (Analistas de Dados/BI e Cientistas de Dados):** São cobrados por diagnósticos rápidos e relatórios confiáveis para justificar desvios aos órgãos de controle.
-
-**Matriz de Stakeholders**
+* **Times Técnicos (Analistas de Dados/BI e Cientistas de Dados):** São cobrados por agilidade na extração de insights, governança e modelos de retreino estruturados.
 
 | Stakeholder | Papel na Tomada de Decisão | Dores Principais | Uso da Solução |
 | :--- | :--- | :--- | :--- |
-| **Gestores de Distribuidoras** | Decisor Estratégico | Dificuldade em prever o passivo de multas e falta de visão consolidada do cumprimento contratual | Acompanhamento do dashboard executivo para monitorar taxas de transgressão e projetar custos regulatórios antes do fechamento oficial. |
-| **Operação e Manutenção (O&M)** | Decisor Operacional | Atuação reativa e falta de critério preditivo para priorizar quais conjuntos elétricos devem receber vistorias preventivas | Utilização do score de risco de Machine Learning para direcionar cronogramas preventivos nos conjuntos com alta probabilidade de estouro |
-| **Analistas de Dados/BI** | Usuário Analítico | Bases da ANEEL pesadas e despadronizadas; lentidão para atualizar relatórios operacionais no Power BI. | Acesso a dados modelados em Star Schema via Parquet de alta performance, agilizando relatórios e auditorias. |
-| **Cientistas de Dados** | Usuário Técnico | Falta de dados limpos para modelagem preditiva e necessidade de retreino periódico dos modelos. | Pipeline reprodutível com histórico sazonal e métricas padronizadas |
+| **Gestores Regulatórios/Diretoria** | Decisor Estratégico | Dificuldade em antecipar passivos financeiros e ausência de visão consolidada de risco de concessão | Acompanhamento do dashboard executivo para monitorar taxas de transgressão e projetar passivos antes do fechamento oficial |
+| **Operação e Manutenção (O&M)** | Decisor Operacional | Atuação reativa e falta de critério preditivo para priorizar vistorias preventivas |Priorização de cronogramas e manutenção preventiva com base no score preditivo de risco mensal por conjunto |
+| **Concessionárias de Energia** | Entidade Regulada | Passivos financeiros com compensações compulsórias e risco de sanções regulatórias e reputacionais | Adoção corporativa da solução como ferramenta de governança regulatória e redução de custos operacionais e multas |
+| **Consumidor Final** | Usuário do Serviço | Frequência de interrupções, danos a aparelhos elétricos e tempo excessivo de restabelecimento | Beneficiado indiretamente pela maior estabilidade do fornecimento e agilidade no restabelecimento da rede |
+| **Analistas de Dados/BI** | Usuário Analítico | Bases da ANEEL pesadas, despadronizadas e com encodings legados, gerando lentidão no Power BI | Carga direta de tabelas modeladas em Star Schema colunar (Parquet), acelerando análises e auditorias |
+| **Cientistas de Dados** | Usuário Técnico | Falta de dados saneados, ausência de pipeline reprodutível e dificuldade de retreino periódico | Consumo de uma camada de features histórica consistente para teste, retreino e validação de modelos preditivos |
 
 ---
 
-### 6. Dados Necessários e Fontes 
+## 2. Escopo e Viabilidade
+### 2.1. Escopo
 
-**Dados Necessários**  
-* Dados dos indicadores: DEC e FEC apurados, limites regulatórios mensais/anuais, valores de compensação financeira e identificador da distribuidora.
+| Dimensão | No escopo (In-Scope) | Fora de Escopo (Out-of-Scope) |
+| :--- | :--- | :--- | 
+| **Granularidade e Privacidade** | Dados regulatórios consolidados em nível de conjunto consumidor, distribuidora, município e UF | Não serão manipulados dados individualizados por consumidor, garantindo conformidade com a LGPD | 
+| **Execução** | Pipeline ELT em lote, com processamento histórico mensal e inferência periódica | Rotinas de streaming em tempo real |
+| **Fontes Externas** | Datasets oficiais de distribuição e qualidade comercial da ANEEL | Não serão integrados arquivos geoespaciais ou API de dados meteorológicos em tempo real |
 
-* Dados complementares: Código e nome do conjunto de unidades consumidoras, quantidade de clientes atendidos, região geográfica/UF, subestação de atendimento e histórico cadastral.
+### 2.2. Hipóteses do Projeto 
 
-* Dados derivados: Médias móveis, taxas de variação mensal, contagem de reincidência de violações consecutivas, índices de sazonalidade e score preditivo de risco de transgressão.
+* **Hipótese 01** - Conjuntos com histórico crônico de transgressões de DEC/FEC apresentam probabilidade de reincidência maior de ultrapassar os limites regulatórios nos períodos subsequentes.
 
-**Fonte de Dados**  
-Os dados são de origem pública e extraídos do **Portal de Dados Abertos da ANEEL** e do arcabouço normativo do **PRODIST**. Para fins de análise, o conjunto de dados será limitado a um período de 5 anos (2021-2025):
+* **Hipótese 02** - Interrupções não programadas possuem maior impacto na variação do estouro do limite (DEC) em comparação às paradas programadas de manutenção.
 
-| Entidade / Recurso | Fonte Oficial | Periodicidade / Granularidade | Uso no Projeto |
-| :--- | :--- | :--- | :--- |
-| **Indicadores Coletivos de Continuidade (DEC e FEC)** | [Portal de Dados Abertos da ANEEL](https://dadosabertos.aneel.gov.br/pt_BR/dataset/indicadores-coletivos-de-continuidade-dec-e-fec) | Mensal / Anual por Conjunto Elétrico | Dados brutos de DEC e FEC (apurado e limites regulatórios) para métricas de BI e alvo do ML. |
-**Interrupções de Energia Elétrica nas Redes de Distribuição** | [Portal de Dados Abertos da ANEEL](https://dadosabertos.aneel.gov.br/pt_BR/dataset/interrupcoes-de-energia-eletrica-nas-redes-de-distribuicao) | Por evento / Ocorrência | Mapeamento da tipologia de causas das quedas (acidentais, programadas, expurgos regulatórios). |
-| **Regras e Parâmetros Regulatórios** | [ANEEL — PRODIST Módulo 8](https://www.gov.br/aneel/pt-br/centrais-de-conteudos/procedimentos-regulatórios/prodist) | Regulatório / Estático | Fórmulas conceituais de transgressão e parâmetros para cálculo da proxy de compensações financeiras. |
+* **Hipótese 03** - A dispersão geográfica e fatores sazonais geram picos concentrados de transgressão em regiões específicas.
 
-**Armazenamento e Formato**  
-Arquivos originais em `.csv`/`.parquet` mantidos fora do versionamento do Git, processados via DuckDB e salvo como Parquet otimizado na pasta `data/interim/` e `data/processed/`.
+* **Hipótese 04** - Conjuntos com maior densidade de unidades consumidoras atendidas apresentam menor tempo médio de restabelecimento (DEC).
 
-**Privacidade e LGPD:** 
-100% dos dados são operacionais e anonimizados na fonte pela ANEEL, sem exposição de dados pessoais ou faturas individualizadas.
+* **Hipótese 05** - O histórico recente de DEC/FEC e do volume de interrupções pode prever o risco de transgressão regulatória no período subsequente.
 
----
-
-### 7. Hipóteses do Projeto 
-
-* **Hipótese 01** - Conjuntos com histórico crônico de transgressão de DEC e FEC apresentam probabilidade significativamente maior de ultrapassar os limites regulatórios nos períodos seguintes.
-
-* **Hipótese 02** - Interrupções não programadas possuem maior impacto no tempo acumulado de desabastecimento (DEC) em comparação às paradas programadas para manutenção.
-
-* **Hipótese 03** - Existe sazonalidade nas interrupções, com meses e regiões mais propensos à piora da continuidade.
-
-* **Hipótese 04** - O volume de unidades consumidoras atendidas e o perfil geográfico do conjunto influenciam diretamente o desempenho dos indicadores de continuidade.
-
-* **Hipótese 05** - O histórico recente de DEC, FEC e do volume de interrupções pode ser utilizado para prever o risco de transgressão regulatória no período subsequente.
-
----
-
-### 8. Riscos
+### 2.3. Riscos
 
 1. **Risco de Dados**
     * Dados faltantes ou nulos, com ausência de registros pontuais em limites ou apurações de conjuntos desativados/reestruturados.
@@ -203,47 +157,87 @@ Arquivos originais em `.csv`/`.parquet` mantidos fora do versionamento do Git, p
 
     * Não considerar alterações ou revisões tarifárias/metas aprovadas pela ANEEL no período.
 
----
-
-### 9. Fora de Escopo
-
-* Não serão manipulados dados individualizados por consumidor, garantindo conformidade com a LGPD.
-
-* A solução não definirá reajustes de tarifa de energia nem estratégias de cobrança ou faturamento.
-
-* O projeto se encerra na entrega do modelo validado com previsões salvas em lote e dashboard no Power BI.
-
-* Não serão integradas APIs meteorológicas em tempo real e arquivos da BDGD (redes elétricas/postes).
-
-* Ausência de banco de dados corporativo dedicado ou cluster em nuvem (arquitetura desacoplada baseada em arquivos Parquet).
-
----
-
-### 10. Estrutura de custos 
+### 2.4. Estrutura de custos 
 
 * **Fontes de Dados:** Gratuitas (Portal de Dados Abertos da ANEEL sob licença pública).
 
 * **Infraestrutura Computacional:** Execução em máquinas locais dos membros da equipe e instâncias gratuitas em nuvem (Google Colab / GitHub).
 
-* **Esforço Humano (Custo Operacional):** Dedicação de 6 membros ao longo do ciclo do projeto, distribuídos entre engenharia de dados, modelagem preditiva, construção do dashboard e documentação.
+* **Armazenamento e Distribuição:** Hospedagem analítica via GitHub Releases, viabilizando consumo dos arquivos processados direto no Power BI.
 
-* **Manutenção Futura (Evolutivo):** Esforço periódico estimado em poucas horas/mês para reexecução do script de download, atualização de novos meses da ANEEL e retreino semestral do modelo.
+* **Esforço Técnico:** Dedicação de 6 membros ao longo do ciclo do projeto, distribuídos entre as áreas de engenharia de dados, modelagem preditiva, construção do dashboard e documentação.
 
----
-
-### 11. Solução
-
-* Pipeline automatizado em Python/DuckDB para ingestão, tratamento de dados nulos, padronização de esquemas, criação de variáveis temporais (médias móveis, defasagens/lags e tendências) e exportação no formato `.parquet`.
-
-* Análise exploratória de Dados (EDA), com identificação de padrões, tendências e possíveis relações entre variáveis.
-
-* Modelo supervisionado de classificação tabular executado em lote (*batch*), gerando scores de probabilidade de violação regulatória para cada conjunto elétrico no período subsequente.
-
-* Painel interativo em Power BI.
+* **Manutenção Futura:** Esforço periódico estimado em poucas horas mensais para extração de novos períodos apurados e retreino do modelo.
 
 ---
 
-### 12. Métricas de Avaliação e Benchmarks de Sucesso
+## 3. Dados e Engenharia Analítica 
+### 3.1. Fontes e Ingestão de Dados
+O projeto consome dados exclusivamente operacionais e públicos disponibilizados pelo Portal de Dados Abertos da ANEEL, compreendendo a série temporal de 5 anos (2021–2025):
+
+| Entidade / Recurso | Fonte Oficial | Periodicidade / Granularidade | Uso no Projeto |
+| :--- | :--- | :--- | :--- |
+| **Indicadores Coletivos de Continuidade (DEC/FEC)** | [Portal de Dados Abertos da ANEEL](https://dadosabertos.aneel.gov.br/pt_BR/dataset/indicadores-coletivos-de-continuidade-dec-e-fec) | Mensal por Conjunto Consumidor | Dados brutos de DEC e FEC (apurado e limites regulatórios) para métricas de BI e alvo do ML. |
+**Interrupções de Energia Elétrica nas Redes de Distribuição** | [Portal de Dados Abertos da ANEEL](https://dadosabertos.aneel.gov.br/pt_BR/dataset/interrupcoes-de-energia-eletrica-nas-redes-de-distribuicao) | Por evento / Ocorrência | Mapeamento da tipologia de causas das quedas e duração. |
+**Limites Regulatórios** | [Portal de Dados Abertos da ANEEL](https://dadosabertos.aneel.gov.br/pt_BR/dataset/indicadores-coletivos-de-continuidade-dec-e-fec/resource/fd69e1dd-fd66-4269-b60c-cc0b7eb221b4) | Anual/Mensal por Conjunto | Metas regulatórias contratuais |
+**Atributos de Conjuntos** | [Portal de Dados Abertos da ANEEL](https://dadosabertos.aneel.gov.br/pt_BR/dataset/indicadores-coletivos-de-continuidade-dec-e-fec/resource/3c780aca-38cf-406d-9d45-f07a9216eef2) | Cadastral/Periódico | Quantitativo de unidades consumidoras e subestações |
+**Indicadores por Município** | [Portal de Dados Abertos da ANEEL](https://dadosabertos.aneel.gov.br/dataset/indqual-municipio/resource/3f841488-80a8-42f2-a6ca-e0c593b228de) | Cadastral/Geográfico | Mapeamento geográfico por Código IBGE, UF e Macrorregião |
+| **Regras e Parâmetros Regulatórios** | [ANEEL — PRODIST Módulo 8](https://www.gov.br/aneel/pt-br/centrais-de-conteudos/procedimentos-regulatórios/prodist) | Regulatório / Estático | Fórmulas conceituais de transgressão e parâmetros para cálculo da proxy de compensações financeiras |
+
+**Armazenamento e Formato:**  
+* `data/raw:` Arquivos originais em *.csv* e *.parquet*
+* `data/interim:` Dados saneados em *.parquet*
+* `data/processed:` Tabelas finais de dimensão e fato em formato *.parquet* colunar estruturadas em *Star Schema*
+
+**Privacidade e Conformidade:** 
+Os dados são 100% operacionais e anonimizados na fonte pela ANEEL, sem exposição de dados pessoais ou faturas individualizadas, garantindo conformidade com a LGPD.
+
+### 3.2. Requisitos e Restrições 
+
+| **Requisitos Funcionais (RF)** |
+|:---|
+| **RF01:** O pipeline deve extrair, validar e integrar os dados de continuidade e limites de 2021 a 2025 de forma automatizada. | 
+| **RF02:** O sistema deve calcular o indicador de transgressão (Apurado > Limite) e a margem de desvio relativo percentual por conjunto/mês |
+| **RF03:** A camada de dados deve validar schemas e tratar dados ausentes e inconsistentes antes do processamento nas camadas analíticas.|
+| **RF04:** Disponibilizar a base processada em modelagem Star Schema contendo tabelas fato e dimensão documentadas. |
+| **RF05:** O modelo de Machine Learning deve gerar uma coluna contendo o *Score de Risco* (probabilidade entre 0 e 1) de descumprimento para o período `t+1`.|
+
+| **Requisitos Não Funcionais (RNF)**
+|:---|
+| **RNF01:** Pipeline de dados e modelagem versionados no Git e ambiente virtual configurado. |
+| **RNF02:** Processamento de arquivos pesados via DuckDB deve operar em modo out-of-core, limitando o consumo de RAM a 4 GB.| 
+| **RNF03:** Os artefatos processados em Parquet devem ser distribuídos via GitHub Releases, permitindo que o Power BI consuma as tabelas diretamente pela Web sem dependência de bancos locais.|
+
+---
+
+## 4. Solução e Metodologia
+### 4.1. Solução
+
+* Pipeline automatizado em Python/DuckDB para ingestão em lote, tratamento de dados, padronização de schemas, validação de qualidade dos dados e exportação no formato `.parquet`.
+
+* Validação automatizada de schemas, tratamento de codificações legadas e garantia de integridade dos dados.
+
+* Modelo supervisionado de classificação, gerando scores de probabilidade de violação regulatória para cada conjunto elétrico no período subsequente.
+
+* Painel interativo em Power BI para apoio à tomada de decisão de stakeholders.
+
+### 4.2. Metodologia
+
+O projeto segue as seis fases do framework **CRISP-DM**, com entregas iterativas e gerenciadas via quadro Kanban:
+
+1. **Compreensão do Negócio (Business Understanding):** Mapeamento das regras regulatórias (PRODIST/ANEEL), impacto operacional das violações de DEC/FEC, definição de KPIs de negócio, métricas técnicas e escopo do projeto.
+
+2. **Compreensão dos Dados (Data Understanding):** Ingestão das bases anuais, auditoria de integridade e Análise Exploratória de Dados (EDA) para identificação de padrões sazonais e outliers.
+
+3. **Preparação dos Dados (Data Preparation):** Limpeza, padronização e estruturação do modelo dimensional.
+
+4. **Modelagem (Modeling):** Desenvolvimento de modelagem preditiva com a seleção de algoritmos de classificação, validação cruzada temporal e engenharia de features temporais.
+
+5. **Avaliação (Evaluation):** Auditoria das regras de agregação e validação de desempenho dos modelos.
+
+6. **Implantação (Deployment):** Publicação dos Parquets processados com predições, conexão com o modelo dimensional no Power BI, consolidação da documentação técnica no repositório, e apresentação final.
+
+### 4.3. Métricas de Avaliação e Benchmarks de Sucesso
 
 1. **Qualidade e Integridade dos Dados:**
    * **Percentual de Valores Ausentes:** Registros sem preenchimento em campos críticos (`DEC`, `FEC`, `Limites` e `IDs de Conjunto`) inferiores a **1%**.
@@ -257,7 +251,7 @@ Arquivos originais em `.csv`/`.parquet` mantidos fora do versionamento do Git, p
 
    * **Identificação de Concentração:** Mapeamento quantitativo comprovando a concentração de horas excedentes nos conjuntos mais críticos.
 
-   * **Performance e Navegação:** Painel em Power BI estruturado em *Star Schema* com filtros dinâmicos e tempo de resposta inferior a **5 segundos** por interação.
+   * **Performance e Navegação:** Painel em Power BI estruturado em *Star Schema* com filtros dinâmicos e tempo de resposta inferior a **5 segundos** por visual.
 
 3. **Desempenho do Modelo Preditivo (Machine Learning):**
    * **Recall (Sensibilidade) $\ge 75\%$:** Capacidade de antecipar a maioria das transgressões reais antes do fechamento do mês, minimizando multas surpresa.
@@ -275,60 +269,41 @@ Arquivos originais em `.csv`/`.parquet` mantidos fora do versionamento do Git, p
 
     * **Priorização Acionável:** Geração de um ranking mensal dos conjuntos elétricos com maior urgência de vistoria preventiva.
 
-    * **Simulação de Redução de Passivos:** Quantificação financeira das compensações regulatórias potencialmente evitadas caso as manutenções atuem a tempo nos conjuntos sinalizados.
+    * **Simulação de Horas de Interrupção Evitadas:** estimativa do volume de horas acumuladas de corte (DEC excedente) potencialmente mitigadas pela atuação preventiva tempestiva nos conjuntos sinalizados.
 
 ---
 
-### 13. Requisitos e Restrições 
+## 5. Entregáveis e Síntese Executiva
+### 5.1. Entregáveis
 
-| **Requisitos Funcionais (RF)** |
-|:---|
-| **RF01:** O pipeline deve consolidar os dados mensais de continuidade (DEC e FEC) de 2021 a 2025. | 
-| **RF02:** O sistema deve calcular o indicador booleano de transgressão (Apurado > Limite) e a margem de desvio relativo para cada conjunto/mês. |
-| **RF03:** A camada de dados deve alimentar o Power BI com um modelo dimensional (*Star Schema*) contendo tabelas fato e dimensão documentadas.|
-| **RF04:** O modelo de Machine Learning deve gerar uma coluna contendo o *Score de Risco* (probabilidade entre 0 e 1) de descumprimento para o período `t+1`.|
+1. **Repositório de Código e Documentação (GitHub):**
+   * Repositório centralizado e versionado contendo código-fonte modular, referências, notebooks analíticos e artefatos de ML.
+   * Documentação executiva no `README.md` com arquitetura da solução, instruções de instalação via ambiente virtual (`.venv`) e guia de execução.
 
-| **Requisitos Não Funcionais (RNF)**
-|:---|
-| **RNF01:** Scripts de dados e modelagem versionados no Git com arquivo `requirements.txt` e ambiente virtual configurado. |
-| **RNF02:** Processamento de arquivos pesados via DuckDB em disco, sem exceder 4 GB de memória RAM local.| 
-| **RNF03:** Estrita aderência à LGPD, não utilizando registros de consumo ou dados pessoais identificáveis.|
+2. **Engenharia de Dados e Machine Learning:**
+   * Pipeline ELT modular em Python 3.11 e DuckDB com orquestração via script raiz (`main.py`).
+   * Camada de governança automatizada com *Quality Gates* para validação de esquemas, integridade referencial e conversão de encodings legados.
+   * Scripts reproduzíveis de engenharia de *features*, treinamento e inferência em lote (*batch*).
 
----
+3. **Camada de Dados Otimizada (Medalhão em Parquet):**
+   * Dados originais preservados na camada `data/raw/` para garantia de linhagem (*data lineage*).
+   * Bases intermediárias padronizadas e limpas na camada `data/interim/`.
+   * Modelo dimensional consolidado na camada `data/processed/` sob arquitetura *Star Schema* (7 dimensões e 2 fatos).
+   * Distribuição dos artefatos processados via *Assets* em GitHub Releases, viabilizando consumo analítico desacoplado.
 
-### 14. Entregáveis
+4. **Notebooks de Análise Exploratória e Diagnóstico (EDA):**
+   * Análises estatísticas descritivas documentando o comportamento histórico de DEC e FEC (2021–2025).
+   * Mapeamento de sazonalidade, concentração de desvios por concessionária/região e testes empíricos de validação das 5 hipóteses do projeto.
 
-1. **Repositório de Código Documentado (GitHub):**
+5. **Painel Interativo de Tomada de Decisão (Power BI):**
+   * Arquivo `.pbix` consumindo os Parquets finais com tempos de resposta inferior a 5 segundos por visual.
+   * **Visão Executiva:** Monitoramento de metas contratuais, ranking de criticidade e volume de horas/eventos excedentes (DEC/FEC).
+   * **Visão Operacional (O&M):** Priorização de vistorias técnicas por conjunto elétrico baseada no *Score de Risco* preditivo (t+1).
 
-   * Código de ingestão e transformação automatizado em DuckDB/Python.
+6. **Relatório Técnico e Síntese Executiva:**
+   * Documentação final do ciclo CRISP-DM consolidando a validação das hipóteses de negócio, matriz de confusão e métricas do classificador (Recall, PR-AUC, F1-Score).
 
-   * Pipeline de treino, validação e inferência em lote de Machine Learning.
-
-   * Arquivo `README.md` com instruções detalhadas de reprodução do ambiente.
-
-
-2. **Camada de Dados Otimizada (Data Lake Local):**
-
-   * Bases consolidadas em Apache Parquet nas pastas `data/interim/` e `data/processed/` (*Star Schema* e dataset pronto para treino de ML).
-
-
-3. **Análise Exploratória de Dados (EDA):**
-
-   * Notebooks documentados com o diagnóstico descritivo do DEC e FEC, análise de sazonalidade, concentração de queixas e validação estatística das hipóteses levantadas.
-
-
-4. **Dashboard Executivo e Operacional (Power BI):**
-
-   * Relatório interativo `.pbix` integrando diagnóstico histórico de DEC/FEC, análise de causas e o score preditivo de transgressão.
-
-
-5. **Relatório Técnico e Apresentação Executiva:**
-
-   * Síntese metodológica contendo a validação das hipóteses, métricas do modelo preditivo e recomendações práticas de negócio.
-
----
-
-### 15. Síntese Executiva 
+### 5.2. Síntese Executiva 
 
  <div align="center">
    <img src=".\assets\data_canvas.png" width=100% alt="Canvas do Problema de Dados" />

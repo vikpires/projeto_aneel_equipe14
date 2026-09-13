@@ -10,7 +10,6 @@
 
 <p align="left">
   <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Apache_Airflow-017CEE?style=for-the-badge&logo=Apache%20Airflow&logoColor=white" alt="Airflow">
   <img src="https://img.shields.io/badge/DuckDB-FFF000?style=for-the-badge&logo=duckdb&logoColor=black" alt="DuckDB">
   <img src="https://img.shields.io/badge/Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest">
   <img src="https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black" alt="Power BI">
@@ -79,7 +78,6 @@ Os dados utilizados são públicos e extraídos do portal de dados abertos da AN
 **Tecnologia / Versão** | **Função** |
 | --- | --- |
 | ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)  | Execução do código e módulos do projeto |
-| ![Apache Airflow](https://img.shields.io/badge/Apache_Airflow-3.1.1-017CEE?style=flat-square&logo=Apache%20Airflow&logoColor=white)  | Agendamento batch, controle do fluxo de dependências e monitoramento de falhas |
 | ![DuckDB](https://img.shields.io/badge/DuckDB-1.0-FFF000?style=flat-square&logo=duckdb&logoColor=black) | Transformação SQL e geração dos Parquets |
 | ![Pytest](https://img.shields.io/badge/pytest-7.0-0A9EDC?style=flat-square&logo=pytest&logoColor=white) | Execução de testes automatizados |
 | ![Pandas](https://img.shields.io/badge/Pandas-2.2-150458?style=flat-square&logo=pandas&logoColor=white) <br> ![NumPy](https://img.shields.io/badge/NumPy-1.26-013243?style=flat-square&logo=numpy&logoColor=white) | Apoio na leitura tabular e cálculos numéricos |
@@ -111,77 +109,25 @@ pip install -r requirements.txt
 
 ```
 
-**2. Opção A: Execução Direta (Standalone)**
+**2. Execução**
 
-Para rodar todo o pipeline (Extração $\rightarrow$ Transformação $\rightarrow$ Validação) diretamente via terminal sem subir o servidor do Airflow:
+Na raiz do projeto, instale as dependências e execute:
 
 ```bash
-python -m src.pipeline
+python main.py
 ```
+
+Para executar os testes automatizados:
 
 ```bash
 pytest -v tests/
 ```
-
-**3. Opção B: Execução Orquestrada via Apache Airflow 3**
-
-**3.1. Definir a versão do Airflow e instalar o Apache Airflow**
->[!WARNING]
->**Atenção:** O Apache Airflow exige o arquivo de restrições (constraints) correspondente à versão exata do Python para evitar conflitos de dependências:
-
-```bash
-# Definir a versão do Airflow
-AIRFLOW_VERSION="3.1.1"
-PYTHON_VERSION="3.11"
-CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
-
-
-# Instalar o Airflow e o task SDK com as restrições oficiais
-pip install "apache-airflow==${AIRFLOW_VERSION}" "apache-airflow-task-sdk" --constraint $CONSTRAINT_URL
-```
-
-**3.2. Configurar as Variáveis de Ambiente**
-Exporte as variáveis para que o Airflow utilize o diretório local do projeto, reconheça a pasta `dags/` e localize os módulos em `src/`:
-
-```bash
-# Define a raiz do Airflow no diretório atual
-export AIRFLOW_HOME=$(pwd)
-
-# Aponta o caminho das DAGs para a pasta dags do projeto
-export AIRFLOW__CORE__DAGS_FOLDER=$(pwd)/dags
-
-# Desativa o carregamento de DAGs de exemplo do próprio Airflow
-export AIRFLOW__CORE__LOAD_EXAMPLES="False"
-
-# Garante que os imports de 'src' funcionem dentro das tasks
-export PYTHONPATH=$(pwd)
-
-```
-**3.3. Inicializar os serviços locais**
-Inicie os componentes do Airflow (Webserver, Scheduler e Triggerer) em modo desenvolvimento:
-
-```batch
-airflow standalone
-```
->[!TIP]
->O comando criará automaticamente o usuário admin. A senha aleatória gerada será exibida nos logs do terminal na primeira execução (ou gravada em `$AIRFLOW_HOME/simple_auth_manager_passwords.json.generated`).
-
-**3.4. Operar e disparar o pipeline**
-
-1. Acesse http://localhost:8080 no seu navegador.
-
-2. Faça login com o usuário **admin** e a **senha** gerada.
-
-3. Localize a DAG `aneel_energy_ingestion_batch`.
-
-4. Ative a DAG e clique no botão **Trigger DAG** para rodar o fluxo completo.
 
 ---
 
 ## 6. Organização dos Diretórios
 
 ```markdown
-├── 📁 dags/               # Definições de DAGs e orquestração de pipelines (Airflow)
 ├── 📁 data/
 │   ├── 📁 raw/            # Dados brutos originais (Camada Bronze)
 │   ├── 📁 interim/        # Dados intermediários tratados (Camada Silver)
