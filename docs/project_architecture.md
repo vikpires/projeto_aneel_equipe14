@@ -6,24 +6,7 @@ O projeto implementa um pipeline ELT local para transformar dados publicos da AN
 
 ## Diagrama da arquitetura
 
-```mermaid
-flowchart LR
-    A[Fontes oficiais ANEEL] --> B[src/data/extractor.py]
-    B --> C[(data/raw<br/>Bronze)]
-    C --> D[Quality Gate Raw]
-    D --> E[src/data/transformer.py<br/>DuckDB + SQL]
-    E --> F[(data/interim<br/>Silver)]
-    F --> G[Quality Gate Interim]
-    G --> H[src/data/fato_dim.py<br/>DuckDB + SQL dimensional]
-    H --> I[(data/processed<br/>Gold)]
-    I --> J[Quality Gate Processed]
-    J --> K[Power BI]
-    J --> L[Analise exploratoria]
-    J --> M[Machine Learning]
-
-    N[GitHub Release<br/>artefato processado] --> O[src/data/fetch_processed.py]
-    O --> I
-```
+<img src="../docs/assets/architecture_diagram.png"></img>
 
 ## Fluxo operacional
 

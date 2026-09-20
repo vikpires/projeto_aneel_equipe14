@@ -1,0 +1,6 @@
+dominio,escopo,entidades,pergunta_de_negocio
+Distribuição e agentes,Distribuidoras responsáveis e conjuntos atendidos,"dim_distribuidora, dim_conjunto",Quem atende cada conjunto?
+Continuidade do serviço,"Indicadores DEC e FEC, valores apurados e limites regulatórios","dim_indicador, fato_continuidade",O indicador ultrapassou o limite regulatório?
+Interrupções,"Eventos agregados, tipos, motivos e causas","fato_causa_mensal, dim_tipo_interrupcao, dim_motivo_interrupcao, dim_causa_interrupcao",Quais interrupções contribuem para a perda de continuidade?
+Geografia,"Municípios, UF e regiões dos conjuntos",dim_conjunto,Onde estão os conjuntos e ocorrências analisados?
+Tempo,"Calendário diário, ano, mês e trimestre",dim_data,Quando os eventos e indicadores ocorreram?
