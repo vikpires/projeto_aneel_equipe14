@@ -2,7 +2,7 @@
 
 ## Visão geral
 
-O projeto implementa um pipeline ELT local para transformar dados publicos da ANEEL em tabelas analiticas no formato *Parquet*. O processamento é executado por Python e DuckDB por meio de pipeline local na raiz do projeto (`main.py`)
+O projeto implementa um pipeline ELT local para transformar dados publicos da ANEEL em tabelas analíticas no formato *Parquet*. O processamento é executado pelo Python e DuckDB através de pipeline local na raiz do projeto (`main.py`)
 
 ## Diagrama da arquitetura
 
@@ -27,12 +27,12 @@ flowchart LR
 
 ## Fluxo operacional
 
-O ponto de execucao é `main.py`, que executa as etapas na seguinte ordem:
+O ponto de execução é `main.py`, que executa as etapas na seguinte ordem:
 
 1. `run_extract_data()` baixa os dados oficiais da ANEEL para `data/raw` (Camada Bronze).
 2. `validate_raw_tables()` verifica arquivos e estrutura mínima dos dados extraídos.
-3. `run_transform_data()` aplica os filtros SQL e grava Parquets em `data/interim` (Camada Silver).
-4. `validate_interim_tables()` verifica tipos, periodo, nulos, duplicidades e integridade.
+3. `run_transform_data()` aplica os filtros SQL e grava os Parquets em `data/interim` (Camada Silver).
+4. `validate_interim_tables()` verifica tipos, período, nulos, duplicidades e integridade.
 5. `run_fato_dim()` cria o Star Schema em `data/processed` (Camada Gold).
 6. `validate_processed_tables()` verifica manifesto, chaves e regras da camada Gold.
 
@@ -41,27 +41,27 @@ Se uma etapa falhar, o pipeline é interrompido para evitar que dados inválidos
 ## Camadas de dados
 
 ### Bronze: `data/raw`
-Contém os arquivos obtidos diretamente das fontes da ANEEL. Os dados ainda não estão no modelo dimensional e passam por validacão antes da transformacão.
+Contém os arquivos obtidos diretamente das fontes da ANEEL. Os dados ainda não estão no modelo dimensional e passam por validação antes da transformação.
 
 ### Silver: `data/interim`
-Contem os dados tratados pelos arquivos `src/sql/filter_*.sql`. Nesta camada sao aplicados padronizacao de nomes e tipos, normalizacao de CNPJ e textos, conversao de datas e numeros, recorte do periodo de 2021 a 2025 e selecao dos campos necessarios ao modelo.
+Contém os dados tratados pelos arquivos `src/sql/filter_*.sql`. Nesta camada são aplicados padronização de nomes e tipos, normalização de CNPJ e textos, conversão de datas e números, recorte do período de 2021 a 2025 e seleção dos campos necessários ao modelo.
 
 ### Gold: `data/processed`
-Contem as dimensoes, os fatos e o arquivo `_manifesto.json` gerados pela modelagem dimensional. Essa camada e destinada ao consumo analitico.
+Contém as dimensões, os fatos e o arquivo `_manifesto.json` gerados pela modelagem dimensional. Essa camada é destinada ao consumo analítico.
 
 ## Principais componentes
 
 ### `main.py`
-Coordena a execucao local do fluxo completo.
+Coordena a execução local do fluxo completo.
 
 ### `src/data/extractor.py`
 Baixa os dados oficiais da ANEEL, prepara as pastas das camadas de dados e gera o manifesto da camada Bronze.
 
 ### `src/data/transformer.py`
-Executa as transformacões com DuckDB usando os arquivos SQL de filtro, exporta os resultados em Parquet e gera o manifesto da camada Silver.
+Executa as transformações com DuckDB usando os arquivos SQL de filtro, exporta os resultados em Parquet e gera o manifesto da camada Silver.
 
 ### `src/data/fato_dim.py`
-Cria as dimensoes e fatos do Star Schema e gera o manifesto da camada Gold.
+Cria as dimensões e fatos do Star Schema e gera o manifesto da camada Gold.
 
 ### Módulos de Qualidade
 
@@ -79,7 +79,9 @@ Contém utilitários de download, leitura de SQL, codificação de CSV, formata�
 
 * O Power BI e os notebooks podem consumir os Parquets de `data/processed`. 
 
-* A camada `data/interim` é a mais adequada para exploração da origem e auditoria dos tratamentos. Features para Machine Learning devem ser derivadas da camada Gold, respeitando a disponibilidade temporal das informaçõs.
+* A camada `data/interim` é a mais adequada para exploração da origem e auditoria dos tratamentos. 
 
-* Existe também um caminho alternativo de distribuição: `src/data/fetch_processed.py` baixa um artefato processado de uma GitHub Release diretamente para `data/processed`, sem executar novamente todo o pipeline.
+* Features para Machine Learning devem ser derivadas da camada Gold, respeitando a disponibilidade temporal das informações.
+
+* Há um caminho alternativo de obtenção dos dados: `src/data/fetch_processed.py`. Esse script baixa o artefato processado do GitHub Release diretamente para `data/processed`, sem ser necessário executar novamente todo o pipeline.
 

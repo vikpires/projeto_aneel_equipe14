@@ -13,14 +13,14 @@ Este documento descreve o catálogo e os metadados das 5 fontes de dados brutas 
 | Coluna raw | Tipo observado | Descrição | 
 | --- | --- | --- | 
 | `DatGeracaoConjuntoDados` | DATE | Data de geração do conjunto de dados | 
-| `IdeConjUndConsumidoras` | INT | Identificador do conjunto da unidade consumidora | 
+| `IdeConjUndConsumidoras` | BIGINT | Identificador do conjunto da unidade consumidora |
 | `DscConjUndConsumidoras` | VARCHAR | Descrição ou nome do conjunto | 
 | `SigAgente` | VARCHAR | Sigla do agente ou distribuidora | 
-| `NumCNPJ` | VARCHAR | CNPJ da distribuidora na fonte | 
+| `NumCNPJ` | BIGINT | CNPJ da distribuidora na fonte |
 | `SigIndicador` | VARCHAR | Sigla do tipo de indicador | 
-| `AnoIndice` | INT | Ano de referência do indicador. |
-| `NumPeriodoIndice` | INT | Período mensal do indicador, de 1 a 12 | 
-| `VlrIndiceEnviado` | FLOAT | Valor do indicador enviado | 
+| `AnoIndice` | BIGINT | Ano de referência do indicador. |
+| `NumPeriodoIndice` | BIGINT | Período mensal do indicador, de 1 a 12 |
+| `VlrIndiceEnviado` | DOUBLE | Valor do indicador enviado |
 
 ---
 
@@ -33,14 +33,14 @@ Este documento descreve o catálogo e os metadados das 5 fontes de dados brutas 
 
 | Coluna raw | Tipo na fonte | Descrição |
 | --- | --- | --- | 
-| `DatGeracaoConjuntoDados` | DATE | Data de geração do conjunto de dados | 
+| `DatGeracaoConjuntoDados` | VARCHAR | Data de geração do conjunto de dados |
 | `SigAgente` | VARCHAR | Sigla do agente ou distribuidora | 
 | `NumCNPJ` | VARCHAR | CNPJ da distribuidora na fonte | 
-| `IdeConjUndConsumidoras` | INT | Identificador do conjunto da unidade consumidora | 
+| `IdeConjUndConsumidoras` | VARCHAR | Identificador do conjunto da unidade consumidora |
 | `DscConjUndConsumidoras` | VARCHAR | Descrição ou nome do conjunto | 
 | `SigIndicador` | VARCHAR | Sigla do tipo de indicador | 
-| `AnoLimiteQualidade` | INT | Ano de referência do limite regulatório. | 
-| `VlrLimite` | FLOAT | Valor máximo regulatório do indicador |
+| `AnoLimiteQualidade` | VARCHAR | Ano de referência do limite regulatório. |
+| `VlrLimite` | VARCHAR | Valor máximo regulatório do indicador |
 
 ---
 
@@ -56,23 +56,23 @@ Arquivos recebidos para os anos de 2021 a 2025. Todos possuem a mesma estrutura 
 | Coluna raw | Tipo observado | Descrição | 
 | --- | --- | --- | 
 | `DatGeracaoConjuntoDados` | DATE | Data de geração do conjunto de dados |
-| `IdeConjuntoUnidadeConsumidora` | INT | Identificador do conjunto da unidade consumidora | 
+| `IdeConjuntoUnidadeConsumidora` | BIGINT | Identificador do conjunto da unidade consumidora |
 | `DscConjuntoUnidadeConsumidora` | VARCHAR | Descrição ou nome do conjunto |
 | `DscAlimentadorSubestacao` | VARCHAR | Alimentador ou subestação associada | 
 | `DscSubestacaoDistribuicao` | VARCHAR | Descrição da subestação de distribuição | 
 | `NumOrdemInterrupcao` | VARCHAR | Número ou ordem do evento de interrupcao | 
 | `DscTipoInterrupcao` | VARCHAR | Tipo operacional da interrupção | 
-| `IdeMotivoInterrupcao` | INT | Código do motivo da interrupção ou expurgo | 
+| `IdeMotivoInterrupcao` | BIGINT | Código do motivo da interrupção ou expurgo |
 | `DatInicioInterrupcao` | TIMESTAMP | Data e hora de início do evento | 
 | `DatFimInterrupcao` | TIMESTAMP | Data e hora de fim do evento | 
 | `DscFatoGeradorInterrupcao` | VARCHAR | Descrição do fato gerador da interrupção. |
-| `NumNivelTensao` | INT | Nível de tensão associado ao evento em Volts. | 
-| `NumUnidadeConsumidora` | INT | Quantidade de unidades consumidoras afetadas. |
-| `NumConsumidorConjunto` | INT | Quantidade de consumidores do conjunto | 
-| `NumAno` | INT | Ano do evento | 
+| `NumNivelTensao` | BIGINT | Nível de tensão associado ao evento em Volts. |
+| `NumUnidadeConsumidora` | BIGINT | Quantidade de unidades consumidoras afetadas. |
+| `NumConsumidorConjunto` | BIGINT | Quantidade de consumidores do conjunto |
+| `NumAno` | BIGINT | Ano do evento |
 | `NomAgenteRegulado` | VARCHAR | Nome do agente regulado | 
 | `SigAgente` | VARCHAR | Sigla do agente ou distribuidora | 
-| `NumCPFCNPJ` | INT | CNPJ da distribuidora na fonte |
+| `NumCPFCNPJ` | BIGINT | CNPJ da distribuidora na fonte |
 
 ---
 
@@ -85,15 +85,15 @@ Arquivos recebidos para os anos de 2021 a 2025. Todos possuem a mesma estrutura 
 
 | Coluna raw | Tipo na fonte | Descrição | 
 | --- | --- | --- | 
-| `DatGeracaoConjuntoDados` | DATE | Data de geração do conjunto de dados |
+| `DatGeracaoConjuntoDados` | VARCHAR | Data de geração do conjunto de dados |
 | `SigAgente` | VARCHAR | Sigla do agente ou distribuidora. |
 | `NumCNPJ` | VARCHAR | CNPJ da distribuidora |
-| `IdeConjUndConsumidoras` | INT | Identificador do conjunto da unidade consumidora | 
+| `IdeConjUndConsumidoras` | VARCHAR | Identificador do conjunto da unidade consumidora |
 | `DscConjUndConsumidoras` | VARCHAR | Descrição do conjunto | 
 | `SigIndicador` | VARCHAR | Sigla do tipo de indicador | 
-| `AnoIndice` | INT | Ano de competência do índice |
-| `NumPeriodoIndice` | INT | Período do índice, expresso em meses | 
-| `VlrIndiceEnviado` | FLOAT | Valor do índice enviado | 
+| `AnoIndice` | VARCHAR | Ano de competência do índice |
+| `NumPeriodoIndice` | VARCHAR | Período do índice, expresso em meses |
+| `VlrIndiceEnviado` | VARCHAR | Valor do índice enviado |
 
 ---
 
@@ -106,9 +106,9 @@ Arquivos recebidos para os anos de 2021 a 2025. Todos possuem a mesma estrutura 
 
 | Coluna raw | Tipo na fonte | Descrição | 
 | --- | --- | --- | 
-| `DatGeracaoConjuntoDados` | DATE | Data de geração do conjunto de dados | 
-| `IdeConjUnidConsumidoras` | INT | Identificador do conjunto da unidade consumidora |  
-| `CodMunicipio` | INT | Código do município cadastrado no IBGE | 
+| `DatGeracaoConjuntoDados` | VARCHAR | Data de geração do conjunto de dados |
+| `IdeConjUnidConsumidoras` | VARCHAR | Identificador do conjunto da unidade consumidora |
+| `CodMunicipio` | VARCHAR | Código do município cadastrado no IBGE |
 | `NomMunicipio` | VARCHAR | Nome do municipio em que se situa o Empreendimento de Geração Distribuída | 
 | `SigUF` | VARCHAR | Sigla das unidades federativa dos estados brasileiros | 
 
