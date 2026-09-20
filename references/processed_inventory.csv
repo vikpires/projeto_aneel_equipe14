@@ -1,0 +1,10 @@
+camada,arquivo,formato,linhas,colunas,tamanho_mb
+processed,dim_causa_interrupcao.parquet,parquet,518,5,0.005532264709472656
+processed,dim_conjunto.parquet,parquet,3824,9,0.060306549072265625
+processed,dim_data.parquet,parquet,1826,7,0.010036468505859375
+processed,dim_distribuidora.parquet,parquet,105,3,0.0019502639770507812
+processed,dim_indicador.parquet,parquet,2,4,0.0009241104125976562
+processed,dim_motivo_interrupcao.parquet,parquet,9,4,0.00115203857421875
+processed,dim_tipo_interrupcao.parquet,parquet,2,2,0.0004062652587890625
+processed,fato_causa_mensal.parquet,parquet,3002279,16,87.62132453918457
+processed,fato_continuidade.parquet,parquet,375082,10,5.316835403442383

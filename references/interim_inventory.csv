@@ -1,0 +1,6 @@
+camada,arquivo,formato,linhas,colunas,tamanho_mb
+interim,atributos.parquet,parquet,7569,9,0.10366630554199219
+interim,continuidade_2021_2025.parquet,parquet,375082,8,2.4786319732666016
+interim,interrupcoes_2021_2025.parquet,parquet,44410820,15,694.108286857605
+interim,limites_2021_2025.parquet,parquet,31844,6,0.09599876403808594
+interim,regiao.parquet,parquet,15162,5,0.14724445343017578

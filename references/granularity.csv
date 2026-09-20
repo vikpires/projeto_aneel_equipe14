@@ -1,0 +1,10 @@
+tabela,granularidade_contexto,chave_primaria (PK),chave_estrangeira (FK),cardinalidade,interpretação
+dim_data,Calendário diário do período analisado,DataKey,-,1:N,Um dia pode possuir várias medições; Um período pode possuir várias agregações
+dim_distribuidora,Distribuidoras e seus identificadores,DistribuidoraKey,-,1:N,Uma distribuidora atende vários conjuntos; Uma distribuidora possui várias medições; Uma distribuidora possui várias agregações
+dim_conjunto,Conjuntos elétricos e localização,ConjuntoKey,DistribuidoraKey,1:N,Uma distribuidora atende vários conjuntos; Um conjunto possui várias medições mensais; Um conjunto possui várias agregações
+dim_indicador,Indicadores DEC e FEC,IndicadorKey,-,1:N,Um indicador aparece em várias medições
+dim_tipo_interrupcao,Tipos operacionais de interrupção,TipoInterrupcaoKey,-,1:N,Um tipo classifica várias agregações
+dim_motivo_interrupcao,Motivos regulatórios de interrupção,MotivoInterrupcaoKey,-,1:N,Um motivo aparece em várias agregações
+dim_causa_interrupcao,Causas normalizadas de interrupção,CausaKey,-,1:N,Uma causa aparece em várias agregações
+fato_continuidade,Valores apurados e limites de DEC/FEC,FatoContinuidadeKey,"DataKey, DistribuidoraKey, ConjuntoKey, IndicadorKey",1:N,Um dia pode possuir várias medições; Uma distribuidora possui várias medições; Um conjunto possui várias medições mensais; Um indicador aparece em várias medições
+fato_causa_mensal,Interrupções agregadas e contribuições estimadas,FatoCausaMensalKey,"DataKey, DistribuidoraKey, ConjuntoKey, TipoInterrupcaoKey, MotivoInterrupcaoKey, CausaKey",1:N,Um período pode possuir várias agregações; Uma distribuidora possui várias agregações; Um conjunto possui várias agregações; Um tipo classifica várias agregações; Um motivo aparece em várias agregações; Uma causa aparece em várias agregações

@@ -1,0 +1,61 @@
+tabela,coluna,tipo,papel,tipo_chave
+dim_data,DataKey,INTEGER,Chave,PK
+dim_data,Data,DATE,Atributo descritivo,-
+dim_data,Ano,SMALLINT,Atributo,-
+dim_data,MesNumero,TINYINT,Atributo,-
+dim_data,MesNome,VARCHAR,Atributo descritivo,-
+dim_data,AnoMes,VARCHAR,Atributo descritivo,-
+dim_data,Trimestre,VARCHAR,Atributo descritivo,-
+dim_distribuidora,SigAgente,VARCHAR,Atributo descritivo,-
+dim_distribuidora,NumCNPJ,VARCHAR,Atributo descritivo,-
+dim_distribuidora,DistribuidoraKey,BIGINT,Chave,PK
+dim_conjunto,ConjuntoKey,BIGINT,Chave,PK
+dim_conjunto,DistribuidoraKey,BIGINT,Chave,FK
+dim_conjunto,NumCNPJ,VARCHAR,Atributo descritivo,-
+dim_conjunto,IdeConjunto,BIGINT,Atributo,-
+dim_conjunto,DscConjunto,VARCHAR,Atributo descritivo,-
+dim_conjunto,CodMunicipio,VARCHAR,Atributo,-
+dim_conjunto,Municipio,VARCHAR,Atributo descritivo,-
+dim_conjunto,UF,VARCHAR,Atributo descritivo,-
+dim_conjunto,Regiao,VARCHAR,Atributo descritivo,-
+dim_indicador,IndicadorKey,TINYINT,Chave,PK
+dim_indicador,SigIndicador,VARCHAR,Atributo descritivo,-
+dim_indicador,NomeIndicador,VARCHAR,Atributo descritivo,-
+dim_indicador,Unidade,VARCHAR,Atributo descritivo,-
+dim_tipo_interrupcao,TipoInterrupcaoKey,TINYINT,Chave,PK
+dim_tipo_interrupcao,TipoInterrupcao,VARCHAR,Atributo descritivo,-
+dim_motivo_interrupcao,MotivoInterrupcaoKey,INTEGER,Chave,PK
+dim_motivo_interrupcao,MotivoCodigo,INTEGER,Atributo,-
+dim_motivo_interrupcao,MotivoDescricao,VARCHAR,Atributo descritivo,-
+dim_motivo_interrupcao,EhExpurgada,TINYINT,Atributo,-
+dim_causa_interrupcao,CausaKey,BIGINT,Chave,PK
+dim_causa_interrupcao,Origem,VARCHAR,Atributo descritivo,-
+dim_causa_interrupcao,Programacao,VARCHAR,Atributo descritivo,-
+dim_causa_interrupcao,GrupoCausa,VARCHAR,Atributo descritivo,-
+dim_causa_interrupcao,CausaDetalhada,VARCHAR,Atributo descritivo,-
+fato_continuidade,FatoContinuidadeKey,UBIGINT,Chave,PK
+fato_continuidade,DataKey,INTEGER,Chave,FK
+fato_continuidade,DistribuidoraKey,BIGINT,Chave,FK
+fato_continuidade,ConjuntoKey,BIGINT,Chave,FK
+fato_continuidade,IndicadorKey,TINYINT,Chave,FK
+fato_continuidade,VlrIndicador,DOUBLE,Métrica,-
+fato_continuidade,VlrLimite,DOUBLE,Métrica,-
+fato_continuidade,UltrapassouLimite,TINYINT,Métrica,-
+fato_continuidade,ExcessoSobreLimite,DOUBLE,Métrica,-
+fato_continuidade,PercentualDoLimite,DOUBLE,Métrica,-
+fato_causa_mensal,FatoCausaMensalKey,UBIGINT,Chave,PK
+fato_causa_mensal,DataKey,INTEGER,Chave,FK
+fato_causa_mensal,DistribuidoraKey,BIGINT,Chave,FK
+fato_causa_mensal,ConjuntoKey,BIGINT,Chave,FK
+fato_causa_mensal,TipoInterrupcaoKey,TINYINT,Chave,FK
+fato_causa_mensal,MotivoInterrupcaoKey,INTEGER,Chave,FK
+fato_causa_mensal,CausaKey,BIGINT,Chave,FK
+fato_causa_mensal,NivelTensao,DOUBLE,Métrica,-
+fato_causa_mensal,QtdInterrupcoes,INTEGER,Métrica,-
+fato_causa_mensal,DuracaoTotalHoras,DOUBLE,Métrica,-
+fato_causa_mensal,DuracaoMediaHoras,DOUBLE,Métrica,-
+fato_causa_mensal,MaiorInterrupcaoHoras,DOUBLE,Métrica,-
+fato_causa_mensal,UnidadesAfetadasSoma,BIGINT,Métrica,-
+fato_causa_mensal,ConsumidorHoras,DOUBLE,Métrica,-
+fato_causa_mensal,ContribDEC_Estimada,DOUBLE,Métrica,-
+fato_causa_mensal,ContribFEC_Estimada,DOUBLE,Métrica,-

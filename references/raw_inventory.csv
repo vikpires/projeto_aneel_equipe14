@@ -1,0 +1,10 @@
+camada,arquivo,formato,linhas,colunas,tamanho_mb
+raw,raw_atributos.csv,csv,776216,9,69.3960599899292
+raw,raw_continuidade.parquet,parquet,5108332,9,28.79904842376709
+raw,raw_interrupcoes_2021.parquet,parquet,7810670,18,202.9814805984497
+raw,raw_interrupcoes_2022.parquet,parquet,8495616,18,218.72117710113525
+raw,raw_interrupcoes_2023.parquet,parquet,9177911,18,234.64930629730225
+raw,raw_interrupcoes_2024.parquet,parquet,9211251,18,242.56417274475098
+raw,raw_interrupcoes_2025.parquet,parquet,9715372,18,259.8837070465088
+raw,raw_limites.csv,csv,263401,8,24.667696952819824
+raw,raw_regiao.csv,csv,42699,5,2.0817251205444336
