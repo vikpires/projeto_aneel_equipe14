@@ -3,7 +3,7 @@
 
 * **Documento:** Escopo do Projeto e Compreensão do Negócio (CRISP-DM Fase 1)
 
-* **Equipe Responsável:** Equipe 14 - Antônio Marcel, Edivaldo Dias, Leonardo Gomes, Leonardo Santos, Vanessa Vilela, Vitor Pires
+* **Equipe Responsável:** Equipe 14 - Antônio Marcel, Edivaldo Dias, Leonardo Gomes, Vanessa Vilela, Vitor Pires
 
 * **Período de Execução:** 01/09/2026 a 30/09/2026 
 
@@ -18,30 +18,30 @@
 ## Sumário
 
 1. **Visão Estratégica e Negócio**
-   - [1.1. Visão Geral](#31-contextualização)
-   - [1.2. Contextualização](#31-contextualização)
-   - [1.3. Problema e Oportunidades](#32-problema)
-   - [1.4. Objetivo](#33-objetivo-geral)
-   - [1.5. Stakeholders e Usuários Finais](#5-usuários-e-matriz-de-stakeholders)
+   - [1.1. Visão Geral](#11-visão-geral)
+   - [1.2. Contextualização](#12-contextualização)
+   - [1.3. Problema e Oportunidades](#13-problemas-e-oportunidades)
+   - [1.4. Objetivo](#14-objetivo)
+   - [1.5. Stakeholders e Usuários Finais](#15-stakeholders-e-usuários-finais)
    
 2. **Escopo e Viabilidade**
-   - [2.1.Escopo do Projeto ](#1-dados-do-projeto)
-   - [2.2 Hipóteses de Negócio](#7-hipóteses-do-projeto)
-   - [2.3 Riscos e Mitigações](#8-riscos)
-   - [2.4 Estrutura de Custos](#10-estrutura-de-custos)
+   - [2.1.Escopo do Projeto](#21-escopo-do-projeto)
+   - [2.2 Hipóteses de Negócio](#22-hipóteses-de-negócio)
+   - [2.3 Riscos](#23-riscos)
+   - [2.4 Estrutura de Custos](#24-estrutura-de-custos)
 
 3. **Dados e Engenharia Analítica**
-   - [3.1 Fontes e Ingestão de Dados](#6-dados-necessários-e-fontes)
-   - [3.2 Requisitos e Restrições ](#13-requisitos-e-restrições)
+   - [3.1 Fontes e Ingestão de Dados](#31-fontes-e-ingestão-de-dados)
+   - [3.2 Requisitos e Restrições](#32-requisitos-e-restrições)
 
 4. **Solução Técnica**
-   - [4.1. Arquitetura da Solução](#11-solução)
-   - [4.2 Metodologia](#4-metodologia)
-   - [4.3. Métricas de Avaliação e Benchmarks de Sucesso](#12-métricas-de-avaliação-e-benchmarks-de-sucesso)
+   - [4.1. Solução](#41-solução)
+   - [4.2 Metodologia](#42-metodologia)
+   - [4.3. Métricas de Avaliação e Benchmarks de Sucesso](#43-métricas-de-avaliação-e-benchmarks-de-sucesso)
 
 5. Entregáveis e Síntese Executiva
-   - [5.1. Entregáveis](#14-entregáveis)
-   - [5.2. Síntese Executiva](#15-síntese-executiva)
+   - [5.1. Entregáveis](#51-entregáveis)
+   - [5.2. Síntese Executiva](#52-síntese-executiva)
 
 
 ---
@@ -67,14 +67,14 @@ Anualmente, a ANEEL estebelece limites máximos toleráveis para vada conjunto d
 
 2. Sujeição a processos punitivos, multas administrativas e elevação do risco reputacional da concessionária.
 
-### 1.3. Problema
+### 1.3. Problemas e Oportunidades
 A gestão de continuidade do serviço nas concessionárias opera frequentemente de forma **reativa**, sendo caracterizado por:
 
 1. Defasagem temporal de diagnóstico: A identificação de violações ocorre após o encerramento do ciclo regulatório, inviabilizando intervenções preventivas.
 2. Passivos financeiros e punições: A ausência de alertas antecipados gera desembolsos imediatos em compensações aos consumidores afetados.
 3. Fricção analítica em escala: As bases brutas possuem dezenas de milhões de ocorrências descentralizadas e não padronizadas limitando a visão operacional e as estratégias de negócio.
 
-### 1.4. Objetivos
+### 1.4. Objetivo
 #### 1.4.1. Objetivo Geral
 Construir uma solução integrada de Engenharia de Dados, Análise de Dados e Machine Learning para diagnosticar o comportamento histórico dos indicadores DEC e FEC, mapear a reincidência de transgressões e estimar a probabilidade mensal de estouro dos limites regulatórios futuros por conjunto elétrico.
 
@@ -114,7 +114,7 @@ Construir uma solução integrada de Engenharia de Dados, Análise de Dados e Ma
 ---
 
 ## 2. Escopo e Viabilidade
-### 2.1. Escopo
+### 2.1. Escopo do Projeto
 
 | Dimensão | No escopo (In-Scope) | Fora de Escopo (Out-of-Scope) |
 | :--- | :--- | :--- | 
@@ -122,7 +122,7 @@ Construir uma solução integrada de Engenharia de Dados, Análise de Dados e Ma
 | **Execução** | Pipeline ELT em lote, com processamento histórico mensal e inferência periódica | Rotinas de streaming em tempo real |
 | **Fontes Externas** | Datasets oficiais de distribuição e qualidade comercial da ANEEL | Não serão integrados arquivos geoespaciais ou API de dados meteorológicos em tempo real |
 
-### 2.2. Hipóteses do Projeto 
+### 2.2. Hipóteses de Negócio
 
 * **Hipótese 01** - Conjuntos com histórico crônico de transgressões de DEC/FEC apresentam probabilidade de reincidência maior de ultrapassar os limites regulatórios nos períodos subsequentes.
 
@@ -276,32 +276,16 @@ O projeto segue as seis fases do framework **CRISP-DM**, com entregas iterativas
 ## 5. Entregáveis e Síntese Executiva
 ### 5.1. Entregáveis
 
-1. **Repositório de Código e Documentação (GitHub):**
-   * Repositório centralizado e versionado contendo código-fonte modular, referências, notebooks analíticos e artefatos de ML.
-   * Documentação executiva no `README.md` com arquitetura da solução, instruções de instalação via ambiente virtual (`.venv`) e guia de execução.
+1. **Código e documentação:** repositório versionado com o código, instruções de execução, documentação da arquitetura e notebooks do projeto.
 
-2. **Engenharia de Dados e Machine Learning:**
-   * Pipeline ELT modular em Python 3.11 e DuckDB com orquestração via script raiz (`main.py`).
-   * Camada de governança automatizada com *Quality Gates* para validação de esquemas, integridade referencial e conversão de encodings legados.
-   * Scripts reproduzíveis de engenharia de *features*, treinamento e inferência em lote (*batch*).
+2. **Dados processados:** pipeline de ingestão e transformação, validações de qualidade, dados intermediários e modelo dimensional em Parquet.
 
-3. **Camada de Dados Otimizada (Medalhão em Parquet):**
-   * Dados originais preservados na camada `data/raw/` para garantia de linhagem (*data lineage*).
-   * Bases intermediárias padronizadas e limpas na camada `data/interim/`.
-   * Modelo dimensional consolidado na camada `data/processed/` sob arquitetura *Star Schema* (7 dimensões e 2 fatos).
-   * Distribuição dos artefatos processados via *Assets* em GitHub Releases, viabilizando consumo analítico desacoplado.
+3. **Análises Exploratória de Dados:** notebook de análise exploratória dos dados para identificar padrões, tendências, sazonalidades e possíveis relações relevantes para o projeto.
 
-4. **Notebooks de Análise Exploratória e Diagnóstico (EDA):**
-   * Análises estatísticas descritivas documentando o comportamento histórico de DEC e FEC (2021–2025).
-   * Mapeamento de sazonalidade, concentração de desvios por concessionária/região e testes empíricos de validação das 5 hipóteses do projeto.
+4. **Painel Power BI:** arquivo `.pbix` conectado às tabelas processadas, com indicadores de continuidade, criticidade, transgressões e apoio à operação.
 
-5. **Painel Interativo de Tomada de Decisão (Power BI):**
-   * Arquivo `.pbix` consumindo os Parquets finais com tempos de resposta inferior a 5 segundos por visual.
-   * **Visão Executiva:** Monitoramento de metas contratuais, ranking de criticidade e volume de horas/eventos excedentes (DEC/FEC).
-   * **Visão Operacional (O&M):** Priorização de vistorias técnicas por conjunto elétrico baseada no *Score de Risco* preditivo (t+1).
+5. **Modelo de Machine Learning:** modelo treinado para estimar o risco de transgressão no período seguinte, acompanhado de métricas de avaliação e resultados das previsões.
 
-6. **Relatório Técnico e Síntese Executiva:**
-   * Documentação final do ciclo CRISP-DM consolidando a validação das hipóteses de negócio, matriz de confusão e métricas do classificador (Recall, PR-AUC, F1-Score).
 
 ### 5.2. Síntese Executiva 
 

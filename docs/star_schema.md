@@ -1,6 +1,6 @@
 # Modelo Estrela (Star Schema)
 
-Segue abaixo a descrição das tabelas dimensão e fato, além do modelo dimensional (Star Schema).
+Este documento descreve as tabelas dimensão e fato, além do modelo dimensional (Star Schema).
 
 ## Dimensões
 
@@ -27,7 +27,71 @@ Segue abaixo a descrição das tabelas dimensão e fato, além do modelo dimensi
 >[!WARNING]
 >Não relacione fatos diretamente entre si. Use dimensões conformadas com cardinalidade 1:*.
 
+---
+
+## Modelo Conceitual
+O modelo conceitual representa as entidades do domínio de distribuição de energia elétrica e suas relações de negócio.
+
+```mermaid
+erDiagram
+    DISTRIBUIDORA ||--o{ CONJUNTO_ELETRICO : "atende"
+    CONJUNTO_ELETRICO ||--|| LOCALIZACAO : "possui"
+    CONJUNTO_ELETRICO ||--o{ INDICADOR_CONTINUIDADE : "tem apuração"
+    INDICADOR_CONTINUIDADE }o--|| LIMITE_REGULATORIO : "é comparado a"
+    CONJUNTO_ELETRICO ||--o{ INTERRUPCAO : "registra"
+    INTERRUPCAO }o--|| CLASSIFICACAO_INTERRUPCAO : "é classificada por"
+    TEMPO ||--o{ INDICADOR_CONTINUIDADE : "contextualiza"
+    TEMPO ||--o{ INTERRUPCAO : "ocorre em"
+
+    DISTRIBUIDORA {
+        string agente
+        string identificacao_fiscal
+    }
+
+    CONJUNTO_ELETRICO {
+        string identificador
+        string descricao
+    }
+
+    LOCALIZACAO {
+        string municipio
+        string uf
+        string regiao
+    }
+
+    INDICADOR_CONTINUIDADE {
+        string tipo_indicador
+        decimal valor_apurado
+    }
+
+    LIMITE_REGULATORIO {
+        string indicador
+        decimal valor_limite
+    }
+
+    INTERRUPCAO {
+        datetime inicio
+        datetime fim
+        decimal duracao
+    }
+
+    CLASSIFICACAO_INTERRUPCAO {
+        string tipo
+        string motivo
+        string causa
+    }
+
+    TEMPO {
+        date data_referencia
+        int ano
+        int mes
+    }
+```
+
+---
+
 ## Star Schema
+O Star Schema é a implementação física do modelo conceitual na camada `data/processed`. Ele organiza o modelo em dimensões e fatos relacionados por chaves primárias e estrangeiras, permitindo análises por tempo, distribuidora, conjunto, indicador, tipo, motivo e causa de interrupção.
 
 ```mermaid
 erDiagram
