@@ -6,7 +6,7 @@ Este diretório contém o relatório desenvolvido em Power BI para o projeto de 
 
 Acesse o relatório interativo:
 
-[Visualizar relatório no Power BI](https://app.powerbi.com/links/-X4mTs0D8b?ctid=06655ccd-8dbf-433f-b20d-ee4f29227b59&pbi_source=linkShare)
+[Visualizar relatório no Power BI](https://app.powerbi.com/view?r=eyJrIjoiOWQzNDJmMTAtY2IxNy00NTFjLWI0M2UtYzFkMzkyMDAwNzUwIiwidCI6IjA2NjU1Y2NkLThkYmYtNDMzZi1iMjBkLWVlNGYyOTIyN2I1OSJ9)
 
 > O acesso ao relatório pode exigir autenticação e permissão no Power BI Service.
 
