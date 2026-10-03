@@ -1,0 +1,3 @@
+Modelo,Limiar,Precision,Recall,F1-score,PR-AUC,ROC-AUC
+Baseline (Classe Majoritária),N/A,0.0,0.0,0.0,8.692376785559064e-05,0.5
+logistic_regression (Limiar Operacional),0.2384,0.00034973187223128935,0.5,0.0006989748369058714,0.0006238228028258308,0.8753960204771565

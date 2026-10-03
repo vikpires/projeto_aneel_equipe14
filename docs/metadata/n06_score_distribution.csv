@@ -1,0 +1,5 @@
+Faixa_Risco,Total_Conjuntos,Transgressoes_Reais,Score_Medio,% da Rede,Taxa_Transgressao,Diretriz de Ação
+1. Baixo (<20%),58872,2,0.035935131247231786,0.8528960101990555,3.397200706617747e-05,Operação Normal
+2. Médio (20-50%),7244,2,0.32638872778845307,0.10494596239098311,0.0002760905577029266,Monitorização Remota
+3. Alto (50-80%),2746,2,0.6111839262591503,0.03978211108857532,0.0007283321194464676,Alerta e Inspeção Preventiva
+4. Crítico (≥80%),164,0,0.8643914794979528,0.0023759163213861443,0.0,Vistoria e Intervenção Imediata
