@@ -36,7 +36,7 @@ Projeto de **Análise de Dados e Machine Learning** desenvolvido sobre dados pú
 
 ## Sumário
 
-1. [Contextualização](#1-contextualização)
+1. [Problema](#1-problema)
 2. [Objetivo](#2-objetivo)
 3. [Base de Dados](#3-base-de-dados)
 4. [Tecnologias](#4-tecnologias)
@@ -49,18 +49,28 @@ Projeto de **Análise de Dados e Machine Learning** desenvolvido sobre dados pú
 9. [Como Executar](#9-como-executar)<br />
 9.1 [Opção 01: Execução Local](#91-opção-01-execução-local)<br />
 9.2 [Opção 02: Execução via Google Colab](#92-opção-02-execução-via-google-colab)<br />
-10. [Resultados e Validação](#10-resultados-e-validação)<br />
-10.1 [Métricas, desempenho e generalização do modelo](#101-métricas-desempenho-e-generalização-do-modelo)<br />
-10.2 [Definição das faixas de risco operacionais](#102-definição-das-faixas-de-risco-operacionais)<br />
-10.3 [Integração analítica no Power BI](#103-integração-analítica-no-power-bi)<br />
-11. [Limitações e Próximos Passos](#11-limitações-e-próximos-passos)
-12. [Equipe](#12-equipe)
+10. [Modelo Preditivo e Validação](#10-modelo-preditivo-e-validação)<br />
+10.1 [Definição do alvo](#101-definição-do-alvo)<br />
+10.2 [Preparação dos dados](#102-preparação-dos-dados)<br />
+10.3 [Validação temporal](#103-validação-temporal)<br />
+10.4 [Métricas e modelos candidatos](#104-métricas-e-modelos-candidatos)<br />
+11. [Resultados](#11-resultados)<br />
+11.1 [Benchmark dos modelos](#111-benchmark-dos-modelos)<br />
+11.2 [Modelo vencedor](#112-modelo-vencedor)<br />
+11.3 [Definição das faixas de risco operacionais](#113-definição-das-faixas-de-risco-operacionais)<br />
+11.4 [Integração analítica no Power BI](#114-integração-analítica-no-power-bi)<br />
+12. [Limitações e Próximos Passos](#12-limitações-e-próximos-passos)
+13. [Equipe](#13-equipe)
 
 ---
 
-## 1. Contextualização
+## 1. Problema
 
-No setor de distribuição de energia elétrica no Brasil, a **Agência Nacional de Energia Elétrica (ANEEL)** estabelece metas e padrões contratuais estritos de qualidade por meio de dois indicadores coletivos de continuidade:
+No setor de distribuição de energia elétrica no Brasil, a **Agência Nacional de Energia Elétrica (ANEEL)** estabelece limites mensais de continuidade de energia fiscalizados por conjunto elétrico através de dois indicadores principais:
+
+- **DEC (Duração Equivalente de Interrupção por Unidade Consumidora):** Tempo médio em que as unidades consumidoras ficaram sem fornecimento (em horas).
+
+- **FEC (Frequência Equivalente de Interrupção por Unidade Consumidora):** Quantidade média de interrupções ocorridas no período.
 
 <p align="center">
   <img src="./docs/assets/dec_fec.png" width=100%  alt="Descrição de DEC e FEC. DEC é o tempo acumulado em horas que o consumidor ficou sem luz. FEC é a frequência que a energia caiu." />
@@ -68,13 +78,15 @@ No setor de distribuição de energia elétrica no Brasil, a **Agência Nacional
   <em>Fig.01 - DEC e FEC</em>
 </p>
 
-A transgressão desses limites regulatórios acarreta compensações financeiras obrigatórias repassadas diretamente na fatura dos consumidores afetados, impactando a receita líquida das concessionárias e sua reputação institucional.
+**Impacto Financeiro:** A transgressão desses limites regulatórios acarreta compensações financeiras obrigatórias repassadas diretamente na fatura dos consumidores afetados, além de penalidades regulatórias e danos reputacionais às distribuidoras. 
+
+**Operação Reativa:** A apuração tardia e reativa no encerramento do ciclo mensal, somada ao volume massivo de ocorrências descentralizadas, limita a visibilidade operacional e as ações preventivas em campo.
 
 ---
 
 ## 2. Objetivo
 
-Desenvolver uma solução analítica integrada de Dados e Machine Learning para analisar o histórico do DEC e FEC e prever com um mês de antecedência quais conjuntos elétricos violarão seus limites regulatórios.
+Desenvolver uma solução analítica integrada de Dados e Machine Learning para prever com um mês de antecedência quais conjuntos elétricos possuem maior probabilidade de transgredir seus limites regulatórios, a partir de padrões e séries temporais históricas de DEC e FEC.
 
 ---
 
@@ -113,7 +125,7 @@ Tecnologia | Função |
 
 ## 5. Entregáveis
 
-Abaixo encontram-se os principais produtos e artefatos desenvolvidos:
+Abaixo, encontram-se os principais produtos e artefatos desenvolvidos:
 
 | Entregável | Formato / Plataforma | Descrição | Link de Acesso |
 | :--- | :--- | :--- | :--- |
@@ -130,7 +142,7 @@ Abaixo encontram-se os principais produtos e artefatos desenvolvidos:
 
 ## 6. Fases do Projeto
 
-Desenvolvimento iterativo guiado pelo framework **CRISP-DM** e gerenciado via quadro Kanban:
+Desenvolvimento iterativo guiado pelo framework **CRISP-DM** e gerenciado via quadro Kanban no GitHub Projects pela equipe:
 
 <p align="left">
   <a href="https://github.com/users/vikpires/projects/7/views/4?sliceBy[columnId]=Milestone">
@@ -153,13 +165,17 @@ Desenvolvimento iterativo guiado pelo framework **CRISP-DM** e gerenciado via qu
 
 ### 7.1 Pipeline ELT
 
-O projeto implementa um pipeline ELT local modular para transformar dados públicos da ANEEL em tabelas analíticas para consumo no formato *Parquet*. 
+- **Arquitetura Medalhão:** Pipeline ELT local e modular estruturado nas camadas *Bronze*, *Silver* e *Gold*, projetado para transformar dados públicos brutos do Portal da ANEEL em tabelas analíticas colunares de alta performance no formato *Parquet*.
 
-O pipeline é composto pelas etapas de ELT, além de quality gates que validam cada transição entre camadas a fim de garantir a integridade dos dados processados.
+- **Governança e Rastreabilidade:** Cada transição entre camadas conta com *quality gates* que validam esquemas e consistência dos dados. O processo gera automaticamente logs detalhados por etapa e arquivos de manifesto para auditoria do ciclo de dados.
 
-Executado por meio de orquestrador local (`main.py`) via CLI, com geração de logs de execução, arquivos de manifesto por camada para auditoria/rastreabilidade e modelagem dimensional em Star Schema.
+- **Orquestração Modular via CLI:** A execução ponta a ponta é centralizada no orquestrador `main.py`, permitindo rodar o fluxo completo ou módulos específicos via linha de comando, assegurando manutenibilidade e reprodutibilidade.
 
-Processamento analítico colunar com DuckDB, eliminando custos e dependência de infraestruturas pesadas. 
+- **Processamento de Alto Desempenho:** Utilização do DuckDB como motor analítico colunar (OLAP) com execução direta em disco e memória local. A solução viabilizou o processamento de **mais de 50 milhões de registros** com baixo consumo de recursos, superando os limites de memória do Pandas e eliminando custos e dependência de infraestruturas em nuvem.
+
+- **Otimização de Armazenamento:** Adoção do algoritmo de compressão **ZSTD (Zstandard)** no lugar do padrão *Snappy* para a escrita dos arquivos Parquet nas camadas analíticas. A escolha reduziu significativamente o espaço ocupado em disco pelos mais de 50 milhões de registros, garantindo alta taxa de compactação sem comprometer a velocidade de leitura e descompressão vetorial no DuckDB e no Power BI.
+
+- **Mecanismo Fail-Fast:** Em caso de inconsistência de dados em um *quality gate*, a execução é imediatamente interrompida, impedindo a propagação de registros corrompidos para as camadas analíticas seguintes.
 
 <p align="center">
   <img src="./docs/assets/architecture_diagram.png" alt="Pipeline ELT - Arquitetura do Projeto" width="100%" />
@@ -176,20 +192,16 @@ Processamento analítico colunar com DuckDB, eliminando custos e dependência de
 | Quality Gate | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![DuckDB](https://img.shields.io/badge/DuckDB-FFF000?style=flat-square&logo=duckdb&logoColor=black)  | Etapa de validação da completude e integridade dos dados entre camadas para evitar inconsistências. | - |
 | Consumo | ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwMCIgZD0iTTEzIDNoLTR2MThoNHYtMTh6bS02IDhoLTR2MTBoNHYtMTB6bTEyLTZoLTR2MjRoNHYtMjR6Ii8+PC9zdmc+&logoColor=black) | Modelo dimensional em Star Schema (**2 tabelas fato** e **7 dimensões**) prontas para consumo analítico. | - |
 
-Durante a execução, se uma etapa falhar, o pipeline é interrompido para evitar que dados inválidos avancem para a camada seguinte.
-
 ### 7.2 Star Schema
 
-O Star Schema trata-se do modelo dimensionsal proposto para organizar o modelo em dimensões e fatos relacionados por chaves primárias e estrangeiras, permitindo análises por tempo, distribuidora, conjunto, indicador, tipo, motivo e causa de interrupção. 
-
-Ao todo, são 9 tabelas criadas: 2 tabelas fato e 7 tabelas dimensão.
+O *Star Schema* trata-se do modelo dimensionsal proposto para organizar o modelo em dimensões e fatos relacionados por chaves primárias e estrangeiras, permitindo análises por tempo, distribuidora, conjunto, indicador, tipo, motivo e causa de interrupção. Ao todo, foram geradas 9 tabelas: 2 tabelas fato e 7 tabelas dimensão.
 
 <p align="center">
   <img src="./docs/assets/star_schema.png" alt="Star Schema" width="100%">
   <br>
   <em>Fig. 03 - Star Schema</em>
 </p>
-
+  
 ---
 
 ## 8. Estrutura de Diretórios
@@ -296,7 +308,7 @@ python -m fato_dim.py
 
 **5. Conectar Star Schema no Power BI**
 1. Obter dados > Parquet
-2. Importar as 9 tabelas da camada Gold
+2. Importar as 9 tabelas analíticas da camada Gold
   - `fato_continuidade.parquet`
   - `fato_causa_mensal.parquet`
   - `dim_data.parquet`
@@ -333,19 +345,71 @@ Executar as células para acessar os dados processados via release do GitHub.
 
 ---
 
-## 10. Resultados
+## 10. Modelo Preditivo e Validação
 
-### 10.1. Métricas, desempenho e generalização do modelo
-* **Critério de Seleção:** O *benchmark* comparativo entre os algoritmos avaliados (Regressão Logística, Extra Trees, XGBoost, CatBoost e LightGBM) priorizou a maximização do **PR-AUC** e um patamar mínimo de **60% de Recall** sob desbalanceamento severo.
+### 10.1. Definição do alvo
+
+- **Período:** 5 anos (2021 a 2025).
+
+- **Escopo geográfico:** Cobertura nacional (todas as regiões e distribuidoras reguladas pela ANEEL).
+
+- **Definição da variável alvo (`UltrapassouLimite`):**
+  - Indicador binário derivado da comparação mensal entre o indicador realizado (`VlrIndiceEnviado`) e o limite regulatório contratual (`VlrLimite`).  
+  - Aplicação da função analítica SQL `LEAD` para projetar a ocorrência da violação para o mês subsequente ($t+1$).  
+  - **Critério de Continuidade:** Geração da janela futura restrita a conjuntos com histórico ininterrupto mês a mês, evitando inconsistências de séries incompletas.
+
+- **Mitigação de Data Leakage:** Todas as variáveis preditivas (*features*) utilizam dados consolidados estritamente até o mês de referência ($t$), assegurando aprendizado livre de vazamento de informações futuras.
+
+### 10.2. Preparação dos dados
+
+- **Engenharia de Atributos:** Construção de variáveis temporais defasadas e acumuladas (*lags*, médias móveis e indicadores de reincidência), além de estimativas de porte da rede e componentes de sazonalidade.
+
+- **Pré-processamento:** Codificação cíclica para variáveis de data/mês e *One-Hot Encoding* para atributos categóricos.
+
+### 10.3. Validação temporal
+
+- **Divisão Temporal dos Dados:**
+
+  - **Treino (2021 a 2023):** Séries históricas empregadas na engenharia de atributos, aprendizado de padrões e ajuste dos pesos dos algoritmos.
+
+  - **Validação (2024):** Período dedicado ao ajuste fino de hiperparâmetros, calibração do limiar de decisão (*threshold*) e seleção do modelo campeão.
+
+  - **Teste Cego (2025):** Conjunto isolado cronologicamente para simular a capacidade de generalização e estabilidade do modelo em cenário real de produção.
+
+| Partição | Período | Observações | % Base | Transgressões | % Transgressões | Atributos |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| **Treino** | 2021 a 2023 | 223.184 | 61% | 70 | 0,03% | 129 |
+| **Validação** | 2024 | 75.072 | 20% | 14 | 0,02% | 129 |
+| **Teste Cego** | 2025 | 69.026 | 19% | 6 | 0,01% | 129 |
+
+### 10.4. Métricas e modelos candidatos
+
+- **Critérios de Avaliação:** Foco em métricas adequadas à raridade extrema dos eventos:
+  -  Precisão, F1-Score, Recall, PR-AUC, ROC-AUC e Matriz de Confusão.
+
+- **Algoritmos Avaliados:** Seleção combinando modelos lineares e não lineares de alto desempenho e baixo custo computacional:
+  - Regressão Logística, ExtraTrees Classifier, XGBoost, LightGBM e CatBoost.
+
+---
+
+## 11. Resultados
+
+### 11.1. Benchmark dos modelos
+* **Critério de Seleção:** O *benchmark* comparativo entre os algoritmos avaliados priorizou a maximização do **PR-AUC** e um patamar mínimo de **60% de Recall** sob desbalanceamento severo, com base nos dados de validação (2024) que totalizam 14 transgressões reais.
+
+- **CatBoost e LightGBM:** Atingiram **85,7% de Recall** (12/14 positivos identificados), porém com uma taxa de falsos positivos proibitiva para o negócio, com o LightGBM gerando mais de **40.000 falsos positivos**, o que inviabilizaria qualquer plano de inspeção preventiva em campo.
+
+- **Regressão Logística, XGBoost e Extra Trees:** Alcançaram **64,3% de Recall** (9/14 positivos) mantendo um volume estritamente controlado de falsos positivos, viabilizando o direcionamento assertivo das equipes operacionais.
 
 <p align="center">
   <img src="./reports/figures/n05_operational_threshold_comparison.png" width="100%" alt="Análise comparativa dos modelos">
   <br>
-  <em>Fig. 04: Comparativo de desempenho de métricas por algoritmo.</em>
+  <em>Fig. 04: Comparativo de desempenho de métricas por algoritmo na partição de validação (2024).</em>
 </p>
 
+### 11.2. Modelo vencedor
 
-* **Modelo Vencedor:** A **Regressão Logística** foi selecionada pelo equilíbrio entre estabilização, maior PR-AUC e baixo índice de falso positivos. Na validação cega (2025), o modelo atingiu **ROC-AUC de 0,8754** e **PR-AUC de 0,000624** (7,1× acima do *baseline* aleatório).
+* A **Regressão Logística** foi selecionada pelo equilíbrio entre estabilização, maior PR-AUC e baixo índice de falsos positivos. Na validação cega (2025), o modelo atingiu **ROC-AUC de 0,8754** e **PR-AUC de 0,000624** (7,1× acima do *baseline* aleatório).
 
 <p align="center">
   <img src="./docs/assets/model_metrics.png" width="100%" alt="Métricas do modelo vencedor">
@@ -353,7 +417,7 @@ Executar as células para acessar os dados processados via release do GitHub.
   <em>Fig. 05: Desempenho, matriz de confusão e métricas da Regressão Logística no conjunto de teste cego (2025).</em>
 </p>
 
-### 10.2. Definição das faixas de risco operacionais
+### 11.3. Definição das faixas de risco operacionais
 * **Calibração do Limiar Operacional (Threshold = 0,2384):** Otimizado para garantir Recall de 50%, capturando as transgressões críticas.
 
 * **Faixas de Risco Operacional:**
@@ -363,7 +427,7 @@ Executar as células para acessar os dados processados via release do GitHub.
 
   * 🔴 Crítico (≥80%): Vistoria imediata e auditoria prioritária.
 
-* **Script de inferência:** Automação via `run_inference.py`, gerando scores prontos para consumo analítico em ferramenta de BI.
+* **Script de inferência:** Automação via `run_inference.py`, gerando scores prontos para consumo analítico em ferramentas de BI.
 
 <p align="center">
   <img src="./reports/figures/n06_risk_score_ranges.png" width="100%" alt="Faixa de scores de risco operacional.">
@@ -371,7 +435,7 @@ Executar as células para acessar os dados processados via release do GitHub.
   <em>Fig. 06: Faixa de scores de risco operacional.</em>
 </p>
 
-### 10.3. Integração analítica no Power BI
+### 11.4. Integração analítica no Power BI
 * **Painel Executivo de Continuidade:** Visão macro da conformidade e evolução histórica dos limites regulatórios consolidados de DEC e FEC.
 
 * **Painel de Diagnóstico de Interrupções:** Análise das causas-raiz operacionais, como tipos de interrupções e concentração geográfica dos conjuntos elétricos no País.
@@ -389,7 +453,7 @@ Executar as células para acessar os dados processados via release do GitHub.
 
 ---
 
-## 11. Limitações e Próximos Passos
+## 12. Limitações e Próximos Passos
 
 * O modelo baseia-se em histórico regulatório, métricas defasadas (*lags*) e tendências de degradação da rede. Com isso, torna-se incapaz de antecipar transgressões causadas por causas pontuais ou acidentais, como tempestades atípicas e queimadas.
 
@@ -403,7 +467,7 @@ Executar as células para acessar os dados processados via release do GitHub.
 
 ---
 
-## 12. Equipe
+## 13. Equipe
 
 <table>
   <tr>
