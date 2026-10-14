@@ -42,12 +42,17 @@ Projeto de **Análise de Dados e Machine Learning** desenvolvido sobre dados pú
 4. [Tecnologias](#4-tecnologias)
 5. [Entregáveis](#5-entregáveis)
 6. [Fases do Projeto](#6-fases-do-projeto)
-7. [Arquitetura](#7-arquitetura)<br />
+7. [Arquitetura da Solução](#7-arquitetura-da-solução)<br />
 7.1 [Pipeline ELT](#71-pipeline-elt)<br />
 7.2 [Star Schema](#72-star-schema)<br />
 8. [Estrutura de Diretórios](#8-estrutura-de-diretórios)
-9. [Como Executar](#9-como-executar)
-10. [Resultados e Validação](#10-resultados-e-validação)
+9. [Como Executar](#9-como-executar)<br />
+9.1 [Opção 01: Execução Local](#91-opção-01-execução-local)<br />
+9.2 [Opção 02: Execução via Google Colab](#92-opção-02-execução-via-google-colab)<br />
+10. [Resultados e Validação](#10-resultados-e-validação)<br />
+10.1 [Métricas, desempenho e generalização do modelo](#101-métricas-desempenho-e-generalização-do-modelo)<br />
+10.2 [Definição das faixas de risco operacionais](#102-definição-das-faixas-de-risco-operacionais)<br />
+10.3 [Integração analítica no Power BI](#103-integração-analítica-no-power-bi)<br />
 11. [Limitações e Próximos Passos](#11-limitações-e-próximos-passos)
 12. [Equipe](#12-equipe)
 
@@ -69,7 +74,7 @@ A transgressão desses limites regulatórios acarreta compensações financeiras
 
 ## 2. Objetivo
 
-Desenvolver uma solução integrada de Dados e Machine Learning para analisar o histórico do DEC e FEC e antecipar o risco de transgressão regulatória no período seguinte.
+Desenvolver uma solução analítica integrada de Dados e Machine Learning para analisar o histórico do DEC e FEC e prever com um mês de antecedência quais conjuntos elétricos violarão seus limites regulatórios.
 
 ---
 
@@ -90,7 +95,7 @@ Os dados utilizados são públicos e extraídos do portal de dados abertos da AN
 
 ---
 
-### 4. Tecnologias
+## 4. Tecnologias
 
 Tecnologia | Função |
 | --- | --- |
@@ -144,11 +149,17 @@ Desenvolvimento iterativo guiado pelo framework **CRISP-DM** e gerenciado via qu
 
 ---
 
-## 7. Arquitetura
+## 7. Arquitetura da Solução
 
 ### 7.1 Pipeline ELT
 
-O projeto implementa um pipeline ELT local para transformar dados públicos da ANEEL em tabelas analíticas para consumo no formato *Parquet*. O processamento é executado pelo Python e DuckDB através de pipeline local na raiz do projeto (`main.py`)
+O projeto implementa um pipeline ELT local modular para transformar dados públicos da ANEEL em tabelas analíticas para consumo no formato *Parquet*. 
+
+O pipeline é composto pelas etapas de ELT, além de quality gates que validam cada transição entre camadas a fim de garantir a integridade dos dados processados.
+
+Executado por meio de orquestrador local (`main.py`) via CLI, com geração de logs de execução, arquivos de manifesto por camada para auditoria/rastreabilidade e modelagem dimensional em Star Schema.
+
+Processamento analítico colunar com DuckDB, eliminando custos e dependência de infraestruturas pesadas. 
 
 <p align="center">
   <img src="./docs/assets/architecture_diagram.png" alt="Pipeline ELT - Arquitetura do Projeto" width="100%" />
@@ -162,14 +173,16 @@ O projeto implementa um pipeline ELT local para transformar dados públicos da A
 | Camada Bronze | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | Extração e armazenamento local dos dados brutos do Portal da ANEEL. | **~50,6 Mi** de linhas |
 | Camada Silver | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![DuckDB](https://img.shields.io/badge/DuckDB-FFF000?style=flat-square&logo=duckdb&logoColor=black) | Limpeza, tipagem, padronização temporal e recorte do período de análise (2021 a 2025) por meio de consultas SQL, usando DuckDB. | **~45 Mi** de linhas |
 | Camada Gold | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![DuckDB](https://img.shields.io/badge/DuckDB-FFF000?style=flat-square&logo=duckdb&logoColor=black) | Agregação dos dados por conjunto e mês e geração das tabelas fato e dimensão em *Parquet*, com cálculo de DEC, FEC, limites e transgressões. | **~3,75 Mi** de linhas |
-| Quality Gate | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![DuckDB](https://img.shields.io/badge/DuckDB-FFF000?style=flat-square&logo=duckdb&logoColor=black)  | Etapa de validação das chaves, completude e integridade dos dados entre camadas para evitar inconsistências. | - |
+| Quality Gate | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![DuckDB](https://img.shields.io/badge/DuckDB-FFF000?style=flat-square&logo=duckdb&logoColor=black)  | Etapa de validação da completude e integridade dos dados entre camadas para evitar inconsistências. | - |
 | Consumo | ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzAwMCIgZD0iTTEzIDNoLTR2MThoNHYtMTh6bS02IDhoLTR2MTBoNHYtMTB6bTEyLTZoLTR2MjRoNHYtMjR6Ii8+PC9zdmc+&logoColor=black) | Modelo dimensional em Star Schema (**2 tabelas fato** e **7 dimensões**) prontas para consumo analítico. | - |
 
-Durante a execução, se uma etapa falhar, o pipeline é interrompido para evitar que dados inválidos avancem para a camada seguinte. No terminal, logs de saída apresentam cada ação executada no pipeline.
+Durante a execução, se uma etapa falhar, o pipeline é interrompido para evitar que dados inválidos avancem para a camada seguinte.
 
 ### 7.2 Star Schema
 
-O Star Schema foi o modelo dimensionsal proposto para organizar o modelo em dimensões e fatos relacionados por chaves primárias e estrangeiras, permitindo análises por tempo, distribuidora, conjunto, indicador, tipo, motivo e causa de interrupção. Ao todo, são 9 tabelas criadas: 2 tabelas fato e 7 tabelas dimensão.
+O Star Schema trata-se do modelo dimensionsal proposto para organizar o modelo em dimensões e fatos relacionados por chaves primárias e estrangeiras, permitindo análises por tempo, distribuidora, conjunto, indicador, tipo, motivo e causa de interrupção. 
+
+Ao todo, são 9 tabelas criadas: 2 tabelas fato e 7 tabelas dimensão.
 
 <p align="center">
   <img src="./docs/assets/star_schema.png" alt="Star Schema" width="100%">
@@ -256,15 +269,15 @@ python main.py
 ```
 O orquestrador local executa em sequência automatizada:
 
-1. **Etapa 1:** `extractor.py` (Ingestão de dados) → extrai dados do Portal da ANEEL e armazenamento local na camada Bronze.
-2. **Etapa 2:** `quality_raw.py`(Quality Gate da Camada Bronze) → Valida os dados brutos baixados e a consistência dos dados.
-3. **Etapa 3:** `transformer.py`(Transformação) → limpeza, padronização de tipos, recorte temporal (2021 a 2025) e armazenamento local como arquivos no formato *Parquet* na camada Silver.
-4. **Etapa 4:** `quality_interim.py`(Quality Gate da Camada Silver) → Valida os dados tratados, a estrutura e o recorte temporal do projeto a fim de evitar vazamento de dados.
-5. **Etapa 5:** `fato_dim.py`(Star Schema Dimensional) → Agregação dos dados por conjunto e mês e criação das tabelas fato e dimensão.
-6. **Etapa 6:** `quality_processed.py`(Quality Gate da Camada Gold) → Validação final da estrutura das tabelas e consistência das chaves e relações.
-7. **Etapa 7:** (Consumo) → Tabelas fato e dimensão geradas e prontas para consumo analítico.
+1. **Etapa 1:** `extractor.py` (Ingestão de dados) → Extrai dados do Portal da ANEEL e armazenamento local na camada Bronze.
+2. **Etapa 2:** `quality_raw.py`(Quality Gate da Camada Bronze) → Valida arquivos e estrutura mínima dos dados extraídos.
+3. **Etapa 3:** `transformer.py`(Transformação) → Executa as etapas de limpeza, padronização de tipos, recorte temporal (2021 a 2025) e armazenamento local das tabelas no formato *Parquet* na camada Silver.
+4. **Etapa 4:** `quality_interim.py`(Quality Gate da Camada Silver) → Valida tipos, recorte temporal do projeto, nulos, duplicidades e integridade.
+5. **Etapa 5:** `fato_dim.py`(Star Schema Dimensional) → Agrega os dados por conjunto e mês e criação das tabelas fato e dimensão.
+6. **Etapa 6:** `quality_processed.py`(Quality Gate da Camada Gold) → Valida a estrutura das tabelas, consistência das chaves e regras de negócio.
+7. **Etapa 7:** (Consumo) → Tabelas fato e dimensão geradas e prontas para consumo analítico em ferramenta de BI.
 
-Todas as etapas geram logs de saída via terminal e arquivos de manifesto para cada camada concluída.
+Todas as etapas geram logs de saída via CLI e arquivos de manifesto para cada camada concluída.
 
 *4.2 Execução por etapas individuais*
 
@@ -298,7 +311,7 @@ python -m fato_dim.py
 >Não relacione fatos diretamente entre si. Use dimensões conformadas com cardinalidade 1:*.
 
 **6. Execução do pipeline de inferência mensal**
-- Para executar o script de inferência mensal que gera os dados para o Power BI:
+- Para executar o script de inferência mensal que gera os dados para consumo analítico no Power BI:
 
 ```bash
 python src/data/run_inference.py
@@ -322,8 +335,8 @@ Executar as células para acessar os dados processados via release do GitHub.
 
 ## 10. Resultados
 
-### 10.1. Métricas, desempenho e generalização do Modelo
-* **Critério de Seleção:** O *benchmark* comparativo entre os algoritmos avaliados (Regressão Logística, Extra Trees, XGBoost, CatBoost e LightGBM) priorizou a maximização da **PR-AUC** aliada a um patamar mínimo de **60% de Recall** sob desbalanceamento severo.
+### 10.1. Métricas, desempenho e generalização do modelo
+* **Critério de Seleção:** O *benchmark* comparativo entre os algoritmos avaliados (Regressão Logística, Extra Trees, XGBoost, CatBoost e LightGBM) priorizou a maximização do **PR-AUC** e um patamar mínimo de **60% de Recall** sob desbalanceamento severo.
 
 <p align="center">
   <img src="./reports/figures/n05_operational_threshold_comparison.png" width="100%" alt="Análise comparativa dos modelos">
@@ -332,7 +345,7 @@ Executar as células para acessar os dados processados via release do GitHub.
 </p>
 
 
-* **Modelo Vencedor:** A **Regressão Logística** foi selecionada pela superioridade no balanço de precisão e estabilidade linear. Na validação cega (2025), o modelo atingiu **ROC-AUC de 0,8754** e **PR-AUC de 0,000624** (7,1× acima do *baseline* aleatório).
+* **Modelo Vencedor:** A **Regressão Logística** foi selecionada pelo equilíbrio entre estabilização, maior PR-AUC e baixo índice de falso positivos. Na validação cega (2025), o modelo atingiu **ROC-AUC de 0,8754** e **PR-AUC de 0,000624** (7,1× acima do *baseline* aleatório).
 
 <p align="center">
   <img src="./docs/assets/model_metrics.png" width="100%" alt="Métricas do modelo vencedor">
@@ -340,17 +353,35 @@ Executar as células para acessar os dados processados via release do GitHub.
   <em>Fig. 05: Desempenho, matriz de confusão e métricas da Regressão Logística no conjunto de teste cego (2025).</em>
 </p>
 
-### 10.2. Integração Analítica no Power BI
-* **Painel Executivo de Continuidade:** Visão macro da conformidade e evolução histórica dos limites regulatórios de DEC e FEC.
+### 10.2. Definição das faixas de risco operacionais
+* **Calibração do Limiar Operacional (Threshold = 0,2384):** Otimizado para garantir Recall de 50%, capturando as transgressões críticas.
 
-* **Painel de Diagnóstico de Interrupções:** Análise de causa-raiz (falhas não programadas vs. acidentais) e concentração geográfica.
+* **Faixas de Risco Operacional:**
+  * 🟢 Baixo (<20%): Operação estável.
+  * 🟡 Médio (20% a 50%): Monitoramento preventivo de oscilações.
+  * 🟠 Alto (50% a 80%): Manutenção preventiva.
 
-* **Painel Preditivo de Risco:** Aplicação do modelo preditivo com filtro de priorização por distribuidora e conjunto elétrico.
+  * 🔴 Crítico (≥80%): Vistoria imediata e auditoria prioritária.
+
+* **Script de inferência:** Automação via `run_inference.py`, gerando scores prontos para consumo analítico em ferramenta de BI.
+
+<p align="center">
+  <img src="./reports/figures/n06_risk_score_ranges.png" width="100%" alt="Faixa de scores de risco operacional.">
+  <br>
+  <em>Fig. 06: Faixa de scores de risco operacional.</em>
+</p>
+
+### 10.3. Integração analítica no Power BI
+* **Painel Executivo de Continuidade:** Visão macro da conformidade e evolução histórica dos limites regulatórios consolidados de DEC e FEC.
+
+* **Painel de Diagnóstico de Interrupções:** Análise das causas-raiz operacionais, como tipos de interrupções e concentração geográfica dos conjuntos elétricos no País.
+
+* **Painel Preditivo de Risco:** Integração das inferências do modelo preditivo no Power BI, com classificação dos conjuntos elétricos filtrados pelas 4 faixas de risco, uma tabela operacional para ação preventiva de manutenção antes do fim do mês regulatório e as principais métricas do modelo.
 
 <p align="center">
   <img src="./docs/assets/powerbi_dashboard.gif" width="75%" alt="GIF da navegação do dashboard do Power BI.">
   <br>
-  <em>Fig. 06: Dashboard Power BI.</em>
+  <em>Fig. 07: Dashboard do Power BI.</em>
 </p>
 
 >[!TIP]
@@ -360,13 +391,15 @@ Executar as células para acessar os dados processados via release do GitHub.
 
 ## 11. Limitações e Próximos Passos
 
-* O modelo baseia-se em histórico regulatório, métricas defasadas (*lags*) e tendências de degradação da rede. Com isso, torna-se incapaz de antecipar transgressões causadas por causas pontuais e/ou acidentais, tais como tempestades atípicas ou queimadas.
+* O modelo baseia-se em histórico regulatório, métricas defasadas (*lags*) e tendências de degradação da rede. Com isso, torna-se incapaz de antecipar transgressões causadas por causas pontuais ou acidentais, como tempestades atípicas e queimadas.
 
 * O número reduzido de transgressões nas partições temporais torna as métricas sensíveis a pequenas variações nos dados. Portanto, os resultados devem ser interpretados como evidências experimentais, e não como garantia de desempenho futuro.
 
 * A granularidade mensal dos dados regulatórios da ANEEL mascara variações pontuais. Interrupções severas concentradas em poucos dias consecutivos não são capturadas como tendência prévia se o início do mês apresentou operação estável.
 
 * Devido ao severo desbalanceamento de classes, conjuntos com histórico de estresse operacional contínuo recebem scores intermediários a altos, mesmo quando a distribuidora consegue evitar a transgressão no limite, demandando triagem pelas faixas de risco para que não haja uma sobrecarga de falsos positivos.
+
+* Como melhorias futuras propõe-se a setorização por região e a incorporação de dados climáticos ao modelo para refinar as causas das interrupções.
 
 ---
 
